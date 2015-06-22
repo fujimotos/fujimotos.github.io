@@ -1,0 +1,64 @@
+/**
+ * Global
+ */
+body {
+    line-height: 1.6;
+    background-color: #fff;
+}
+
+a {
+    color: #357da7
+}
+
+a:visited {
+    color: #a75f35
+}
+
+blockquote {
+    border: solid 1px dimgray;
+    padding: 0 0.5em;
+}
+
+code {
+    font-family: monospace;
+}
+
+code.block {
+    background-color: #EEE;
+    display: block;
+}
+
+
+/** 
+ * Structure
+ */
+div.header {
+    text-align: center;
+}
+div.content {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/**
+ * Util class
+ */
+.permlink {
+    margin-left: 0.5em;
+}
+
+.reference {
+    text-align: right;
+    font-weight: bold;
+}
+
+.note {
+    border: 1px dashed #777;
+    padding: 0px 1em;
+    margin: 0 auto;
+    width: 90%;
+}
+
+.warning {
+    color: #ff4500;
+}
