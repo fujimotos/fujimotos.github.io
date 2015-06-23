@@ -21,10 +21,10 @@ blockquote {
 
 code {
     font-family: monospace;
+    background-color: #EEE;
 }
 
 code.block {
-    background-color: #EEE;
     display: block;
 }
 
