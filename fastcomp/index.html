@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv='content-type' content='text/html; charset=utf-8'>
+	<title>fastcomp documentation</title>
+    <link rel='stylesheet' type='text/css' href='../css/standard.css'>
+</head>
+<body lang='ja'>
+
+<div class='header'>
+
+<h1>fastcomp documentation</h1>
+
+</div>
+
+<h2>Model based algorithm</h2>
+
+<p>The key concept of fastcomp is <i>edit pattens</i>. As an example, consider the statement: <code>LevenshteinDistance(str1, str2) is 1</code>. This statement can be rephrased as "We can transform str1 to str2 with one insertion, deletion or substatitution." This means that we can verify the original statement by checking if applying any of these edit patterns (insertion/deletion/substitution) to str1 will produce str2.
+
+<p>This is exectly how fastcomp measure the edit distance. Internally, fastcomp holds the computational models of possible edit patterns, and try to apply each of the edit patterns to input strings.
+
+<p>So why this can be fast? The crucial point is that you can omit the most of edit patterns before actually applying them.
+
+
+</body>
+</html>
