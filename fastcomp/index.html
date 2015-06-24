@@ -13,11 +13,17 @@
 
 </div>
 
-<h2>Model based algorithm</h2>
+<h2>The key concept</h2>
 
-<p>The key concept of fastcomp is <i>edit pattens</i>. As an example, consider the statement: <code>LevenshteinDistance(str1, str2) is 1</code>. This statement can be rephrased as "We can transform str1 to str2 with one insertion, deletion or substatitution." This means that we can verify the original statement by checking if applying any of these edit patterns (insertion/deletion/substitution) to str1 will produce str2.
+<p>The key concept of fastcomp is <i>edit pattens</i>. As an example, consider the statement: <code>LevenshteinDistance(str1, str2) is 1</code>. This statement can be rephrased as "We can transform str1 to str2 with one insertion, deletion or substatitution." This means that we can verify the original statement by checking if applying any of these edit patterns (insertion, deletion, or substitution) to str1 will produce str2.
 
-<p>This is exectly how fastcomp measure the edit distance. Internally, fastcomp holds the computational models of possible edit patterns, and try to apply each of the edit patterns to input strings.
+<p>This is exectly how fastcomp measure the edit distance between input strings. Internally, fastcomp holds the computational models of possible edit patterns, and try to apply each pattern to the inputs.
+
+<div style='display: inline-block; margin: 0.5em 1em; border: 1px solid gray'>
+    <img height=250 width=350 src='image/example_1.png'>
+</div>
+
+<h2>Why it is fast</h2>
 
 <p>So why this can be fast? The crucial point is that you can omit the most of edit patterns before actually applying them.
 
