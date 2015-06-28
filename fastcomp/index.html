@@ -25,8 +25,8 @@
 
 <h2>Why is it fast?</h2>
 
-<p>So how does it make the computation fast? The crucial point is that we can reject the most of edit patterns without actually applying them. Back to the diagram above. If we focus on the fact that the input words 'kitten' and 'bitten' have <i>the same string length</i>, it becomes obvious that, in this context, a substitution is the only possible option at all, as applying an insertion (or deletion) will change the length of a string.
-<p>The same argument can be applied to other cases as well. For brevity, let us denote the difference in length between the input strings by <var>w</var> and the maximum Levenshtein distance by <var>md</var>. Below is the matrix table that shows all the possible edit patterns when <var>md</var> = 1:
+<p>So how does it make the computation fast? The crucial point is that we can reject the most of edit patterns without actually applying them. Back to the diagram above. If we focus on the fact that the input words 'kitten' and 'bitten' have <i>the same string length</i>, it becomes obvious that a substitution is the only possible option in this context at all, as applying an insertion (or deletion) will change the length of a string.
+<p>The same argument can be applied to the other cases as well. For the sake of brevity, let us denote the difference in length between the input strings by <var>w</var> and the maximum Levenshtein distance by <var>md</var>. Below is the matrix table that shows all the possible edit patterns when <var>md</var> = 1:
 
 <table border=1 cellpadding=3>
   <tr><th></th><th>edit patterns</th></tr>
@@ -35,7 +35,7 @@
   <tr><td><var>w</var> &gt; 1</td><td><i>NA</i></td></tr>
 </table>
 
-<p>(Note that insertion and deletion are essentially interchangeable in this context. If str1 can be transformed into str2 by one insertion, it implies that str2 can be transformed into str1 by one deletion. So checking only insertion does suffice here.)
+<p>(Note that insertion and deletion are essentially interchangeable in this context. If str1 can be transformed into str2 by one insertion, it implies that str2 can be transformed into str1 by one deletion. Therefore, checking only insertion does suffice here.)
 <p>We can easily expand the table above to the case when <var>md</var> = 2:
 
 <table border=1 cellpadding=3>
