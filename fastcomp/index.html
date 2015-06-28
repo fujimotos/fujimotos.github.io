@@ -15,9 +15,9 @@
 
 <h2>The key concept</h2>
 
-<p>The key concept of fastcomp is <i>edit pattens</i>. As an example, consider the statement: <code>LevenshteinDistance(str1, str2) is 1</code>. This statement can be rephrased as "We can transform str1 to str2 with one insertion, deletion or substatitution." This means that we can verify the original statement by checking if applying any of these edit patterns (insertion, deletion, or substitution) to str1 will produce str2.
+<p>The key concept of fastcomp is <i>edit pattens</i>. As an example, consider the statement: <code>LevenshteinDistance(str1, str2) == 1</code>. This statement can be rephrased as "We can transform str1 to str2 with one insertion, deletion or substitution." This means that we can verify the original statement by checking if applying any of these edit patterns (insertion, deletion, or substitution) to str1 will produce str2.
 
-<p>This is exectly how fastcomp measure the edit distance between input strings. Internally, fastcomp holds the computational models of possible edit patterns, and try to apply each pattern to the inputs. The digram below shows how fastcomp calculates the Levenshtein distance between 'kitten' and 'bitten' when the maximum distance is 1:
+<p>This is exactly how fastcomp measures the edit distance between input strings. Internally, fastcomp holds the computational models of possible edit patterns, and try to apply each pattern to the inputs. The digram below shows how it measures the Levenshtein distance between 'kitten' and 'bitten' when the maximum distance is 1:
 
 <div style='display: inline-block; margin: 0.5em 1em; border: 1px solid gray'>
     <img height=250 width=350 src='image/example_1.png'>
@@ -25,7 +25,26 @@
 
 <h2>Why is it fast?</h2>
 
-<p>So why does it make the computation go fast? The crucial point is that you can reject the most of edit patterns before actually applying them.
+<p>So how does it make the computation fast? The crucial point is that we can reject the most of edit patterns before actually applying them. Back to the diagram above. Observing that the input words 'kitten' and 'bitten' have <i>the same string length</i>, we can trivially conclude that one insertion (or deletion) will never transform the former into the latter. Therefore, in this case, all we need to check is that substitution one letter of 'kitten' would produce the word 'bitten'.
+<p>This argument can be easily generalized and using it we can reduce the possible edit patterns dramatically. Here we denote by <var>w</var> the difference in length between the input strings and by <var>md</var> the maximum Levenshtein distance to consider. Below is the matrix table that shows the possible edit patterns when <var>md</var> = 1:
+
+<table border=1 cellpadding=3>
+  <tr><th></th><th>edit patterns</th></tr>
+  <tr><td><var>w</var> = 0</td><td>one substitution</td></tr>
+  <tr><td><var>w</var> = 1</td><td>one insertion or one deletion</td></tr>
+  <tr><td><var>w</var> &gt; 1</td><td><i>NA</i></td></tr>
+</table>
+
+<p>We can easily expand the tabular matrix above to the case when <var>md</var> = 2:
+
+<table border=1 cellpadding=3>
+  <tr><th></th><th>edit patterns</th></tr>
+  <tr><td><var>w</var> = 0</td><td>two substitutions or (one insertion + one deletion)</td></tr>
+  <tr><td><var>w</var> = 1</td><td>(one deletion + one replacement) or (one insertion + one replacement)</td></tr>
+  <tr><td><var>w</var> = 2</td><td>two deletions or two insertions</td></tr>
+  <tr><td><var>w</var> &gt; 2</td><td><i>NA</i></td></tr>
+</table>
+
 
 
 </body>
