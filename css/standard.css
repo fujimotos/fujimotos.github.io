@@ -22,12 +22,16 @@ blockquote {
 code {
     font-family: monospace;
     background-color: #EEE;
+    padding: 0 0.3em;
 }
 
 code.block {
     display: block;
 }
 
+var {
+    font-weight: bold;
+}
 
 /** 
  * Structure
