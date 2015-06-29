@@ -10,8 +10,9 @@
 <div class='header'>
 
 <h1>fastcomp documentation</h1>
-
 </div>
+
+<p>Project page: <a href='https://github.com/fujimotos/fastcomp'>https://github.com/fujimotos/fastcomp/</a>
 
 <h2>The key concept</h2>
 
@@ -35,7 +36,7 @@
   <tr><td><var>w</var> &gt; 1</td><td><i>NA</i></td></tr>
 </table>
 
-<p>(Note that insertion and deletion are essentially interchangeable in this context. If str1 can be transformed into str2 by one insertion, it implies that str2 can be transformed into str1 by one deletion. Therefore, checking only insertion does suffice here.)
+<p>(Note that insertion and deletion are essentially interchangeable in this context. If str1 can be transformed into str2 by <i>one insertion</i>, it implies that str2 can be transformed into str1 by <i>one deletion</i>. Therefore, checking only insertion does suffice here.)
 <p>We can easily expand the table above to the case when <var>md</var> = 2:
 
 <table border=1 cellpadding=3>
@@ -45,8 +46,7 @@
   <tr><td><var>w</var> = 2</td><td>two insertions</td></tr>
   <tr><td><var>w</var> &gt; 2</td><td><i>NA</i></td></tr>
 </table>
-<p>Now, by observing the length of input strings carefully, we can reduce the task of computing the Levenshtein distance into testing very limited number of edit patterns.
-
+<p>Thus, by observing the length of input strings carefully, we can reduce the task of computing the Levenshtein distance into testing very limited number of edit patterns.
 
 </body>
 </html>
