@@ -33,6 +33,15 @@ var {
     font-weight: bold;
 }
 
+dt {
+    font-weight: bold;
+}
+
+dd {
+    font-size: 0.9rem;
+    color: #333;
+}
+
 /** 
  * Structure
  */
