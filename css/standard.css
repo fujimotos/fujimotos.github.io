@@ -3,16 +3,16 @@
  */
 body {
     line-height: 1.6;
-    background-color: #fff;
+    font-family: sans-serif;
 }
 
-a {
-    color: #357da7
-}
+h1 { font-size: 1.5em; }
+h2 { font-size: 1.3em; }
+h3 { font-size: 1.1em; }
+h4 { font-size: 1.0em; }
 
-a:visited {
-    color: #a75f35
-}
+a { color: #357da7 }
+a:visited { color: #357da7 }
 
 blockquote {
     border: solid 1px dimgray;
@@ -27,51 +27,4 @@ code {
 
 code.block {
     display: block;
-}
-
-var {
-    font-weight: bold;
-}
-
-dt {
-    font-weight: bold;
-}
-
-dd {
-    font-size: 0.9rem;
-    color: #333;
-}
-
-/** 
- * Structure
- */
-div.header {
-    text-align: center;
-}
-div.content {
-    max-width: 900px;
-    margin: 0 auto;
-}
-
-/**
- * Util class
- */
-.permlink {
-    margin-left: 0.5em;
-}
-
-.reference {
-    text-align: right;
-    font-weight: bold;
-}
-
-.note {
-    border: 1px dashed #777;
-    padding: 0px 1em;
-    margin: 0 auto;
-    width: 90%;
-}
-
-.warning {
-    color: #ff4500;
 }
