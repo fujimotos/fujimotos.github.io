@@ -3,24 +3,29 @@
 <head>
   <meta http-equiv='content-type' content='text/html; charset=utf-8'>
   <title>fujimotos.github.io</title>
-  <link rel='stylesheet' type='text/css' href='css/standard.css'>
-  <style>
-    td { padding-right: 5px; }
-  </style>
 <body lang='en'>
+<div class='wrapper'>
+
 <h1>fujimotos.github.io</h1>
 
-<h2>Programs by categoly</h2>
-<h3>Fuzzy string search</h3>
+<div class='sub-header'>
+
+  <span>Author: Fujimoto Seiji &lt;fujimoto@ceptord.net&gt;</span>
+  <span class='msg'>In the honor of xaw.</span>
+
+</div>
+
+<div class='content'>
+
+<h2>Fuzzy string search</h2>
 <table>
 <tr><td><a href='https://github.com/fujimotos/fastcomp'>fastcomp</a></td>
 <td>A fast algorithm for calculating (Damerau-)Levenshtein distance.
-    <a href='fastcomp/index.html'>[doc]</a></td></tr>
 <tr><td><a href='https://github.com/fujimotos/TinyFastSS'>TinyFastSS</a></td>
 <td>A disk-based index structure for string similarity search.</td></tr>
 </table>
 
-<h3>Gzip utils</h3>
+<h2>Gzip utils</h2>
 <table>
 <tr><td><a href='https://github.com/fujimotos/arcgzip'>arcgzip</a></td>
 <td>A gzip utility with full metadata support.</td></tr>
@@ -28,20 +33,99 @@
 <td>Dump a gzip file into human-readable format (and convert it back to binary)</td></tr>
 </table>
 
-<h3>Toys</h3>
+<h2>Toys</h2>
 <table>
 <tr><td><a href='https://github.com/fujimotos/charec'>charec</a></td>
-<td>Simple handwrite recognition in JavaScript.
-    <a href='charec/index.html'>[demo]</a></td></tr>
+<td>Simple handwrite recognition in JavaScript.</td></tr>
 <tr><td><a href='https://github.com/fujimotos/eubin'>eubin</a></td>
-<td>A dump POP3 client for easy message retrieval.</td></tr>
+<td>A dumb POP3 client for easy message retrieval.</td></tr>
+<tr><td><a href='https://github.com/fujimotos/huey-dynamodb'>huey-ddb</a></td>
+<td>A task queue backend implemented on Amazon DynamoDB.</td></tr>
 </table>
 
-<hr>
-<p>Fujimoto Seiji &lt;fujimoto at ceptord.net&gt;<br>
-   <a href='http://ceptord.net'>[HomePage]</a>
-   <a href='https://github.com/fujimotos'>[Github]</a>
-   <a href='http://ceptord.net/note/static/fujimoto-gpg.txt'>[GPG]</a>
+<h2>Demo/Documentation</h2>
+<table>
+<tr><td><a href='fastcomp/index.html'>fastcomp doc</a></td>
+<td>Internal documentation on fastcomp algorithm.</td></tr>
+<tr><td><a href='charec/index.html'>charec demo</a></td>
+<td>Online handwrite recognition demo.</td></tr>
+</table>
 
+<h2>Contact Me</h2>
+<a href="mailto:fujimoto@ceptord.net">Mail</a>
+<a href='http://ceptord.net/note/static/fujimoto-gpg.txt'>My PGP Key</a>
+<a href='http://ceptord.net/'>Personal Page (ja)</a>
+
+</div>
+</div>
 </body>
+<style>
+body {
+    background: url(./dottile.png);
+    font-size: 14px;
+    font-family: monospace;
+}
+
+h1 {
+    text-align: center;
+    font-size: 1rem;
+    padding: 5px;
+    border-bottom: 1px solid #333;
+    margin: 0;
+}
+
+h2, h3, h4, h5 {
+    font-size: 1em;
+    padding: 14px 0;
+    margin: 0;
+}
+
+li {
+    margin: 10px 0;
+}
+
+a {
+    color: #000;
+    font-size: 12px;
+    text-decoration: none;
+    padding: 3px 7px;
+    border: 1px solid #333;
+    border-radius: 2px;
+    box-shadow: 1px 1px #666;
+}
+
+div.wrapper {
+    background: #fff;
+    width: 80%;
+    min-width: 800px;
+    min-height: 620px;
+    border: 1px solid #333;
+    margin: 20px auto;
+    box-shadow: 1px 1px #666;
+}
+
+div.content {
+    padding: 7px;
+}
+
+div.sub-header {
+    padding: 7px;
+    border-bottom: 1px solid #333;
+}
+
+span.msg {
+    float: right;
+    min-width: 200px;
+    text-align: right;
+}
+
+table a {
+    display: block;
+    text-align: center;
+}
+
+table td {
+    padding: 3px 7px;
+}
+</style>
 </html>
