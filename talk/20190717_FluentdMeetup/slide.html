@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>2019.07.17 The State of Windows Support in Fluent Bit</title>
+<style>
+html {line-height:1.4;font-size:3em;font-family:"Liberation Sans";}
+body {margin:0;padding:0;}
+h1 {font-weight:normal;font-size:1.2em;color:#204aae;margin:0;margin-top:25%;text-align:center;}
+h2 {font-weight:normal;font-size:1.2em;color:#204aae;margin:0;margin-bottom:1.5em;}
+ol,ul {margin:0 0 0 2em;}
+li {margin:0.5em 0;}
+figure {text-align:center;}
+table {border-collapse:collapse;width:80%;margin:0 auto;}
+th,td {border:1px solid #aaa;padding:0.2em 0.4em;}
+th {background:#eeeeee;}
+td {background:#fafafa;}
+pre {margin: 3em 2em;font-size:1.2em;}
+pre b {color:#00a;}
+.sub {color: #333;text-align:center;margin-top:1em;font-weight:lighter;}
+.talk, .slide {page-break-after:always;padding:0.5em;position:relative;}
+.index {font-size:0.5em;position:absolute;top:5px;right:20px;}
+s {color:#999;}
+.talk, .index {display: none;}
+@media screen {
+  html {font-size:2.3em;}
+  .talk, .slide {height:210mm;width:297mm;border:1px solid #000;margin:5px auto;}
+  .talk {font-family: "DejaVu Sans";}
+  img {max-width:100%;}
+}
+</style>
+</head>
+<div class='slide'>
+<h1>The State of Windows Support in Fluent Bit</h1>
+<div class='sub'>
+Fujimoto Seiji<br>
+Clear Code Inc.<br><br>
+2019.07.17<br>
+Fluentd Meetup
+</div>
+</div>
+
+<div class='talk'>
+<ul>
+<li>I'm an engineer from clear code inc,
+<li>... and right now working on the project to port Fluent Bit to Windows.
+<li>Today I want to provide a general introduction of Fluent Bit
+<li>... and talk about the state of Windows support I'm working on.
+</div>
+
+<div class='slide'>
+<h2>Talk Agenda</h2>
+<ol>
+<li>Higher overview of Fluent Bit
+<li>The state of Windows support
+<li>The future of development
+</div>
+
+<div class='talk'>
+<ul>
+<li>Here is my agenda.
+<li>Today I want to first provide an overview of Fluent Bit,
+<li>... What problem it tries to solve,
+<li>... and why you need to care about it.
+<li>... for those who are not well familiar with Fluent Bit.
+<li>Then I'll talk about the current state of Windows Support.
+<li>... and want to talk about the development plan in future.
+<li>So let's start.
+</ul>
+</div>
+
+<div class='slide'>
+<h1>Higher Overview</h1>
+<div class='sub'>
+"Log Management Problem"
+</div>
+</div>
+
+<div class='talk'>
+<ul>
+<li>Let me start by saying that we have tons and tons of log data to manage,
+<li>We have logs from web servers,
+<li>... logs from database servers,
+<li>... logs from proxy servers, 
+<li>... and so on.
+<li>And the amount of logs is increasing very rapidly each year.
+</div>
+
+<div class='slide'>
+<h2>Traditional Web application Stack</h2>
+<figure>
+<img src='img/lamp.png'>
+</figure>
+</div>
+
+<div class='talk'>
+<ul>
+<li>This is a traditional web application,
+<li>... which has two Nginx servers
+<li>... two Python app servers
+<li>... and two PostgreSQL servers,
+<li>My question is "how many log files this stack has?"
+<li>(5sec PAUSE)
+
+<li>Let me count them up.
+<li>... First we have two access log from Nginx of course,
+<li>... and we have additional two logs from Python,
+<li>... and two logs from PostgreSQL.
+</div>
+
+<div class='slide'>
+<h2>Traditional Web application Stack</h2>
+<figure>
+<img src='img/lamp-log.png'>
+</figure>
+</div>
+
+<div class='talk'>
+<ul>
+<li>So we have at least 6 logs,
+<li>All of which we need to monitor carefully,
+<li>... or we'll miss a serious incident.
+<li>... like exception happens, connection limit exceeded, replication fails and others
+<li>(5sec PAUSE)
+<li>It's already not a quite trivial to monitor them properly, but things get better.
+</ul>
+</div>
+
+<div class='slide'>
+<h2>Age of Micro Services</h2>
+<figure>
+<img width=300px src='img/lamp.png'>
+<img width=300px src='img/lamp.png'>
+<img width=300px src='img/lamp.png'><br>
+<img width=300px src='img/lamp.png'>
+<img width=300px src='img/lamp.png'>
+<img width=300px src='img/lamp.png'>
+</figure>
+</div>
+
+<div class='talk'>
+<ul>
+<li>Now it's age of micro services and virtualisation.
+<li>Now you can literally have a dozens of severs just to run a single application,
+<li>and every server emits log files independently with each other. 
+<li>In this slide now you have six micro applications,
+<li>... so you end up having 36 logs to monitor,
+<li>... because you have six applications and each emits six logs.
+<li>... so six times six is 36.
+<li>How do you monitor them properly?
+</div>
+
+
+<div class='slide'>
+<h2>Rise of Log Management Solutions</h2>
+
+<ul>
+<li>Splunk
+<li>Elasticsearch + Kibana
+<li>InfluxDB
+<li>Apache Kafka
+<li>etc. etc.
+</div>
+
+<div class='talk'>
+<ul>
+<li>It's no wonder that everyone suddenly rushes to log management solutions,
+<li>... like Splunk, Elasticsearch,
+<li>... and time series database like InfluxDB
+<li>... and message queue like Kafka.
+<li>I'm sure that you are using one or two of them at work,
+<li>... and I for one use them at work.
+<li>They are indeed amazing products.
+</div>
+
+
+<div class='slide'>
+<h2>Remaining Problems</h2>
+<figure>
+<img src='img/lamp-conn.png'>
+</figure>
+</div>
+
+<div class='talk'>
+<ul>
+
+<li>But the remaining problem here is that how to send your logs to these products.
+<li>These log files do not transfer themselves to other servers,
+<li>... so you need to make it happen.
+<li>The question is "how".
+</div>
+
+<div class='slide'>
+<h2>Summary (so far)</h2>
+<ul>
+<li>You have a large amount of log data.
+<li>You have amazing log management solutions.
+<li>What's missing is a pipeline to connect them.
+</ul>
+</div>
+
+<div class='talk'>
+<ul>
+<li>I summarize my points so far,
+<li>... You have a large amount of log data at one hand, 
+<li>... You have amazing log management solutions at another hand.
+<li>... What is missing is a pipeline to connect them.
+</ul>
+</div>
+
+<div class='slide'>
+<h1>Solution</h1>
+<div class='sub'>
+Fluent Bit Overview
+</div>
+</div>
+
+<div class='talk'>
+<ul>
+<li>We develop Fluent Bit to solve this problem.
+<li>Fluent Bit is a program that can talk a number of protocols
+<li>and let you transfer data to your favorite log management solutions very easily.
+</div>
+
+<div class='slide'>
+<h2>Use Fluent Bit to connect services</h2>
+<figure>
+<img src='img/./overview.png'>
+</figure>
+</div>
+
+<div class='talk'>
+<ul>
+<li>This picture illustrates how Fluent Bit works.
+<li>For example, it can speak Kafka protocol,
+<li>... so you can use fluent-bit to stream your logs into Kafka clusters.
+<li>Also it can speak Elasticsearch protocol,
+<li>... so you can ship your logs file into Elasticsearch server very easily.
+<li>It supports more than twenty types of outputs, and more than
+twenty types of inputs.
+<li>... So it's pretty much capable.
+</ul>
+</div>
+
+<div class='slide'>
+<h2>What is the difference with Fluentd?</h2>
+
+<figure>
+<img width=600 src='img/fluentd.png'><br><br>
+<img width=800 src='img/fluent-bit.png'>
+</figure>
+</div>
+
+<div class=talk>
+<ul>
+<li>At this point, you may wonder
+<li>... "Isn't that what Fluentd exactly does?
+<li>... what is the difference between Fluentd and Fluent Bit?"
+<li>(PAUSE)
+<li>The keyword is "efficiency".
+<li>As you may know, Fluentd is written in Ruby.
+<li>It's great and very convenient language but quite slower to run than compiled languages.
+<li>Since Fluent Bit is written in c, it can process a lot more data efficiently than Fluentd.
+</div>
+
+<div class='slide'>
+<h2>Processed Lines Per Second (the higher the better)</h2>
+
+<figure>
+<img src='img/comp.png'>
+</figure>
+</div>
+
+<div class=talk>
+<ul>
+<li>This table illustrates the difference between them.
+<li>... Blue is fluent-bit, gray is Fluentd and Y axis is the lines processed per second, so the higher the better.
+<li>For LTSV, fluent bit can process 2 times more data per second..
+<li>... so pretty much faster than Fluentd.
+<li>Even For JSON, which Fluentd has a quite optimized parser for,
+<li>... but still Fluent Bit outperforms Fluentd by twenty or thirty percent.
+</div>
+
+<div class='slide'>
+<h2>Summary (so far)</h2>
+
+<ul>
+<li>Fluent Bit is a log shipper.
+<li>It can transfer your logs to a number of services.
+<li>It's very efficient thanks to C.
+</ul>
+</div>
+
+<div class=talk>
+<p>So the summary so far is
+<ul>
+<li>Fluent Bit is a very convenient log shipper.
+<li>It can transfer your logs to a number of services like Splunk Elasticsearch, Kafka.
+<li>It's very efficient thanks to C.
+</div>
+
+<div class='slide'>
+<h1>State of Windows Support</h1>
+<div class='sub'>
+"Evolving of Fluent Bit"
+</div>
+</div>
+
+<div class=talk>
+<ul>
+<li>So this is the main part.
+<li>(PAUSE)
+<li>First I'd like to talk a bit about the history of Fluent Bit.
+<li>I'd like to start by telling that Fluent Bit was initially developed only for Linux,
+<li>...indeed only for embedded Linux at first.
+</div>
+
+<div class='slide'>
+<h2>Five years ago (2014)</h2>
+
+<p>"Fluent Bit is a collection tool designed for Embedded Linux that collects Kernel messages and Hardware metrics"
+<p>... From README.md at b327996bfc
+</div>
+
+<div class='talk'>
+<ul>
+<li>Five years ago, in the initial commit of Fluent Bit,
+<li>... the readme said "Fluent Bit is a collection tool designed for Embedded Linux that collects Kernel messages and Hardware metrics".
+<li>So that was the start.
+<li>... It was meant to be for Embedded Linux.
+</ul>
+</div>
+
+<div class='slide'>
+<h2>Evolving of Fluent Bit</h2>
+<ul>
+<li><b>2015</b> "Fluent Bit is an events collector for <i>Linux, Embedded Linux, OSX and BSD</i>"
+<li><b>2017</b> "Native <i>aarch64</i> support has been merged."
+<li><b>2019</b> "Starting from this version we are supporting builds on <i>Windows environments</i>"
+</ul>
+</div>
+
+<div class='talk'>
+<ul>
+<li>Since then, we got full Linux support, OSX support and BSD support in twenty-fifteen.
+<li>We have also expand the supported architecture.
+<li>... Notably we have now full support for arm 64 since two years ago in twenty-seventeen.
+<li>(PAUSE)
+<li>And this year we've gotten Fluent Bit to run on Windows.
+</ul>
+</div>
+
+<div class='slide'>
+<h2>State of Windows support</h2>
+<ul>
+<li>Windows Project Start = 2018/12
+<ul>
+<li>Done porting most of the core engine.
+<li>1/3 of plugins are working.
+</ul>
+<li>Early stage, but it's already usable.
+</ul>
+</div>
+
+<div class='talk'>
+<ul>
+<li>So what is the current status of Windows support?
+<li>The porting project started the last December.
+<li>... so roughly we have six month's work.
+<li>It actually came along very smoothly.
+<li>... We've done porting most of core engine,
+<li>... and around third of plugins are working.
+<li>It's still quite an early stage,
+<li>... but the windows port is usable already.
+</ul>
+</div>
+
+
+<div class='slide'>
+<h2>The achievement so far</h2>
+
+<ul>
+<li>Enable to compile Fluent Bit on Microsoft Visual C.
+<li>Can launch Fluent Bit on PowerShell (or cmd.exe)
+<li>Done porting 20 plugins
+<li>Installers are also available (EXE and ZIP)
+</ul>
+</div>
+
+<div class='talk'>
+<ul>
+<li>More specifically, the works we've done are,
+<li>... enable to compile Fluent Bit on Microsoft Visual C.
+<li>... Now we can launch Fluent Bit from shell like PowerShell.
+<li>... Done porting 20 plugins to Windows.
+<li>Installers are also available (in two flavours: EXE and ZIP)
+<li>... so installation is pretty much trivial.
+</ul>
+</div>
+
+<div class='slide'>
+<h1>Step-by-step Tutorial</h1>
+<div class='sub'>
+"How you can use Fluent Bit"
+</div>
+</div>
+
+<div class='talk'>
+<ul>
+<li>So I want to explain how you can use Fluent Bit from today.
+<li>(PAUSE)
+<li>This is very easy indeed,
+<li>... so I'd like to show how to do that in a step by step manner.
+</ul>
+</div>
+
+<div class='slide'>
+<h2>The task</h2>
+<figure>
+<img width=1200 src='img/kafka.png'>
+</figure>
+</div>
+
+<div class='talk'>
+<ul>
+<li>Let me first set up some context.
+<li>Suppose you have some application running on Windows
+<li>... and the application outputs its logs to c-log-app.log
+<li>And you have Kafka cluster as a central message bus.
+<li>The task is transfer the log file from Windows to Kafka.
+<li>(PAUSE)
+<li>Using Fluent Bit, we can set up such a pipeline just in
+three steps.
+</ul>
+</div>
+
+
+<div class='slide'>
+<h2>Tutorial</h2>
+<ol>
+<li>Download a ZIP installer for Windows.
+</ol>
+<figure>
+<img src='img/download.png'>
+</figure>
+<p>https://ci.appveyor.com/project/fluent/fluent-bit-2e87g/history
+</div>
+
+<div class='talk'>
+<ul>
+<li>First, download the ZIP installer.
+<li>We have EXE and ZIP installers as I said,
+<li>... and ZIP is easier for quick testing.
+<li>We build installers for each commit on AppVeyor,
+<li>... so you can download from there if you want the latest one.
+<li>Open the link on your browser and just click and save it.
+</div>
+
+<div class='slide'>
+<h2>Tutorial</h2>
+<ol start=2>
+<li>Unzip the ZIP archive
+</ol>
+<img src='img/unzip.png'>
+</div>
+
+<div class='talk'>
+<ul>
+<li>Next, expand the ZIP file.
+<li>You need to just click the ZIP archive and select "Expand All" on Explorer
+<li>... or you can use the 'Expand-Archive' commandlet on PowerShell.
+<li>Both work fine, so choose the one you like.
+</ul>
+</div>
+
+<div class='slide'>
+<h2>Tutorial</h2>
+<ol start=3>
+<li>Launch Fluent Bit from PowerShell
+</ol>
+<pre>
+PS> <b>bin\fluent-bit.exe</b> -i tail
+                       -p path=C:\logs\app.log
+                       -o kafka
+                       -p brokers=192.168.100.1
+                       -p topics=windows
+</pre>
+</ol>
+</div>
+
+<div class='talk'>
+<ul>
+<li>Then open PowerShell and just launch fluent-bit.
+<li>The ZIP file contains fluent.bit.exe which is a stand-alone binary.
+<li>As you see, it is included in the bin directory 
+</ul>
+</div>
+
+<div class='slide'>
+<h2>Tutorial</h2>
+<ol start=3>
+<li>Launch Fluent Bit from PowerShell
+</ol>
+<pre>
+PS> bin\fluent-bit.exe <b>-i tail
+                       -p path=C:\logs\app.log</b>
+                       -o kafka
+                       -p brokers=192.168.100.1
+                       -p topics=windows
+</pre>
+
+</ol>
+</div>
+
+<div class='talk'>
+<ul>
+<li>As I said, the target log file is stored in C-logs-app.log,
+<li>So we use tail plugin as an input,
+<li>... set the path accordingly
+<li>... so that fluent-bit can read from the log file.
+</ul>
+</div>
+
+
+<div class='slide'>
+<h2>Tutorial</h2>
+<ol start=3>
+<li>Launch Fluent Bit from PowerShell
+</ol>
+<pre>
+PS> bin\fluent-bit.exe -i tail
+                       -p path=C:\logs\app.log
+                       <b>-o kafka
+                       -p brokers=192.168.100.1
+                       -p topics=windows</b>
+</pre>
+</ol>
+</div>
+
+
+<div class='talk'>
+<ul>
+<li>And we assumed that the output is Kafka.
+<li>So we use the Kafka output plugin,
+<li>... and set broker's IP address,
+<li>... and tell fluent-bit to send the data with "windows" topic
+<li>That's it, and you'll see log data running to your Kafka server.
+</ul>
+</div>
+
+
+<div class='slide'>
+<h2>Summary: How to run Fluent Bit</h2>
+<ol>
+<li>Download the ZIP archive
+<li>Unzip it
+<li>Run the fluent-bit
+</ol>
+</div>
+
+<div class='talk'>
+<ul>
+<li>The summary is that
+<li>... Download the ZIP archive
+<li>... Unzip it
+<li>... and run the executable
+<li>This is all that you need.
+<li>... So please try at home if you have some interest in Fluent Bit
+</ul>
+</div>
+
+<div class='slide'>
+<h1>The Future</h1>
+</div>
+
+<div class='talk'>
+<ul>
+<li>So this is status of our efforts to make Fluent Bit Windows-compatible log shipping solution.
+<li>I'd like to finish my talk with sharing some ideas of future development.
+</ul>
+</div>
+
+<div class='slide'>
+<h2>Some Ideas</h2>
+<ul>
+<li>Expand Plugin Support
+<li>Windows Event Log Plugin (ongoing)
+<li>More document &amp; guides
+</ul>
+</div>
+
+<div class='talk'>
+<ul>
+<li>First I'm planning to port the remaining 32 plugins to Windows as much as possible.
+<li>And as to the plugin, we are right now working on a plugin for Windows Event Log
+<li>... which should be useful for Windows administrators.
+<li>And I'm planning to add more documents, since it's kinda sparse right now.
+</ul>
+</div>
+
+<div class='slide'>
+<h2>We need feedbacks from users!</h2>
+<ul>
+<li>Tell us on the issue tracker!
+<li><a href='https://github.com/fluent/fluent-bit'>https://github.com/fluent/fluent-bit</a>
+</ul>
+</div>
+
+<div class='talk'>
+<ul>
+<li>And we need feedbacks from users!
+<li>What is your use case?
+<li>Which service do you want to connect to?
+<li>If you have idea please tell us on the issue tracker.
+<li>... I'd like to hear from real-life users.
+<li>Thank You.
+</ul>
+
+</div>
+
+<script>
+nodes = document.getElementsByClassName("slide");
+for (var i=0; i<nodes.length; i++) {
+    var div = document.createElement("div");
+    div.innerHTML = i;
+    div.className = "index";
+    nodes[i].appendChild(div);
+}
+</script>
+</body>
+</html>

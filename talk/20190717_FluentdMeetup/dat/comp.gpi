@@ -1,0 +1,18 @@
+set style fill solid border lc rgb "black" 
+set boxwidth 0.25 relative
+
+set terminal png font "Liberation Sans,25"  size 1300,650
+
+set style line 12 lc rgb 'black' lt 1 lw 2
+set grid ytics ls 12
+
+set xtics offset 3,0
+set ytics
+set yrange [0:300000]
+set ylabel "[lines/s]"
+set xlabel "(Measured on Intel Core i7-8700T on Debian)"
+set key outside right
+
+plot "dat/comp.dat" using ($0*4+0):2:xtic(1) with boxes lw 2 lc rgb "#7fbfff" title "fluent-bit",\
+     "dat/comp.dat" using ($0*4+1):3 with boxes lw 2 lc rgb "#eeeeee" title "fluentd";
+replot

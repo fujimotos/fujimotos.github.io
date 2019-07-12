@@ -1,0 +1,148 @@
+I'm an engineer from clear code inc, and right now working on the project
+to port Fluent Bit to Windows. Today I want to provide a general
+introduction of Fluent Bit and talk about the state of Windows support
+I'm working on.
+
+    Higher Overview
+
+Let me start by saying that we have tons and tons of log data to manage,
+We have logs from app servers, logs from database servers, logs from
+proxy servers and so on.
+
+And the amount of logs is increasing very rapidly each year.
+
+This is a traditional web application, which has two web servers and
+two database servers, so called LAMP stack, you know, linux apacha
+mysql and programming language such as python. The question is how many
+log files this stack contains?
+
+First we have two access log from nginx of course, and we have two app
+logs from python application, and two database logs from mysql. So we have
+at least 6 logs, all of which we need to monitor carefully,
+or we'll miss a serious incident.
+
+Now it's age of micro services and virtualization. Now you can
+literally have a dozens of severs just to run a single application,
+and every server emits log files independently with each other. 
+In this slide now you have thirteen six logs to manage. How do you monitor them?
+
+It's no wonder that everyone suddely rushes to log management solutions,
+like splunk, elasticsearch, and time series database like influxdb or
+message manager like kafka. I'm sure that you are using one
+or two of them at work, and I for one use them at work. They are indeed
+amazing products.
+
+But the remaining problem here is that how to send your logs to
+these products. Your have log files in servers and files do not transfer
+themselves to other servers, so you need to make it happen. The question
+is "how".
+
+I summarize my points so far,
+
+ * You have a large amount of log data at one hand, 
+ * You have amazing log management soclutions at another hand.
+ * What is missing is a pipeline to connect them.
+
+    Solution
+
+We develop Fluent Bit to solve this problem. Fluent Bit is a program that
+can talk a number of protocols and let you transfer data to log managers
+very easily.
+
+For example, it can speak Kafka protocol, so you can use fluent-bit as a pipe
+to connect the server to your kafka cluster. Also it can speak elasticsearc
+protocol, so you can ship your logs file into elasticsearch server 
+
+At this point, you may wonder "Isn't that what Fluentd exactly does? what is
+the difference with Fluentd"? The keyword is "efficiency". As you may know,
+Fluentd is written in Ruby. It's great and very convenient language but quite
+slower to run than compiled languages. Since Fluent Bit is written in c, it
+can process a lot more data efficiently than Fluentd.
+
+This table illustrates the difference between them. For LTSV, fluent bit can process 2
+times more data per second, and for JSON, which fluentd has a quite
+optimized parser for, but still Fluent Bit outperforms fluentd by twenty or
+thirty percent.
+
+The summary so far is
+
+ * Fluent Bit is a lightweight log shipper.
+ * It can transfer your logs to a number of services.
+ * It's very efficient because of written in C.
+
+    State of Windows Support
+
+So this is the main part.
+
+I'd like to start by telling that initially Fluent Bit was developed
+only for Linux, indeed only for embedded Linux.
+
+Five years ago, in the initial commit of Fluent Bit, the readme said
+"Fluent Bit is a collection tool designed for Embedded Linux that
+collects Kernel messages". So that was the start. It was meant to be
+for Embedded Linux.
+
+Since then, we got full Linux support, OSX support and BSD support
+too. We have also expand the support to architecture other than 
+intel. Notablly we have now full support for arm 64 since two years ago.
+And this year we've gotten Fluent Bit to run on Windows.
+
+So what is the current status of Windows support? We have been working
+on the project since the last december, so roughly weve six month's work
+right now. It have been proceeding very smoothly so far.
+We've done porting most of core engine, and around third of plugins are
+working. It's still quite an early stage, but we archive some
+usability already.
+
+The works we've done is, now we
+
+ * Can compile Fluent Bit on Microsoft Visual C
+ * Can launch Fluent Bit on Windows
+ * Done porting 20 plugins to Windows, so you can use them.
+ * Installers are also available (in two flavours: EXE and ZIP)
+
+    How you can use it
+
+So I want to explain that how you can start to use Fluent Bit today.
+This is very easy indeed, so I'd like to show how to do that in a step
+by step manner. Actually it needs just 3 step.
+
+First, download the ZIP installer from the official site. You can open
+the link on your browser and just click and save it.
+
+Next, unarchive the ZIP installer. You can do this by right clicking
+the archive and expanding it.
+
+The ZIP archive contains a binary executable of fluent-bit. So launch
+a powershell (or any shell you'd like to use), execute it with some
+parameters.
+
+In this example, I assume you have a log file stored at C:\log\json.log
+and it contains JSON lines. As an output, you're running a kafka instance
+at intra network, and you want to send data under the "winlog" topic.
+
+That's it, and you'll see log data running to your kafka server in real time.
+
+So the summary is that
+
+ * Download the ZIP archive
+ * Unzip it
+ * and run the executable
+
+This is all that you need.
+
+    The Future
+
+So this is status of our efforts to make Fluent Bit Windows-compatible
+log shipping solution. I'd like to finish my talk with sharing some ideas
+of future development.
+
+Expand the plugins that works on Windows, in order to make it feature-complete.
+Enable to register itself as Windows Service, to make the management easier,
+and we are right now working on a plugin for Windows Event Log that should be
+pretty much useful for Windows administartor.
+
+And we need feedbacks from users! What is your use case? Which service do you
+want to connect to? If you have idea please tell us on the issue tracker.
+
+Thank you.
