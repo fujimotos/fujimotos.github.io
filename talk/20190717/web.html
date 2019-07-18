@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>The State of Windows Support in Fluent Bit</title>
+<style>
+body {width:1000px;margin:0 auto;font-family:sans-serif;font-size:0.95rem;line-height:1.3;}
+blockquote {padding:0 1em;border:1px solid #333;}
+table {border-collapse:collapse;font-family:serif;}
+h2 {font-size:1.3em;padding-left:0.7em;}
+h2 a {color:inherit;text-decoration:none;}
+td {padding: 1em;vertical-align:top;}
+.license {font-size:0.8em;text-align:right;color:#666;}
+img {border:1px solid #333;}
+.ref {font-size:0.9em;color:#555;float:right;}
+pre {background:#000;color:#08f608;border-radius:5px;padding:1em}
+</style>
+</head>
+<body lang="en">
+<span class='ref'>Version 2019.07.17</span>
+
+<h1>The State of Windows Support in Fluent Bit</h1>
+
+<p>
+This is my talk given on July 17 2019 at Fluentd Meetup, a collocated event of
+<a href='https://events.linuxfoundation.org/events/open-source-summit-japan-2019/'>
+Open Source Summit Tokyo 2019</a>
+<p>
+Many thanks to Eduardo Silva and Masahiro Nakagawa for inviting me as a speaker.
+
+<table style='margin-top:3em;'>
+<tr>
+<td><a href='img/slide-01.png'><img src='img/slide-thumb-01.png'></img></a></td>
+<td>
+<p>
+I'm an engineer from ClearCode Inc. and right now working on the project
+to port Fluent Bit to Windows.
+<p>
+Today I want to provide a general introduction of Fluent Bit and talk about
+the state of Windows support I'm working on.
+</td>
+</tr>
+<!--
+<tr>
+<td><a href='img/slide-02.png'><img src='img/slide-thumb-02.png'></img></a></td>
+<td>
+<p>
+Here is my talk agenda. Today I want to first provide an overview of Fluent Bit,
+focusing on:
+<ul>
+<li>What problem it tries to solve.
+<li>Why you need to care about it.
+</ul>
+<p>
+Then I'll talk about the current state of Windows Support, and
+want to discuss on the future development plan a bit.
+<p>
+So let's start.
+</td>
+</tr>
+-->
+</table>
+
+<h2 id='problem'><a href='#problem'>Problem of Log Management</a></h2>
+<table>
+<tr>
+<td><a href='img/slide-03.png'><img src='img/slide-thumb-03.png'></img></a></td>
+<td>
+<p>
+<p>
+Let me start by saying that we have tons and tons of log data to manage,
+We have logs from app servers, logs from database servers, logs from
+proxy servers and so on.
+<p>
+And the amount of logs is increasing very rapidly each year.
+
+</td>
+</tr>
+<tr>
+<td><a href='img/slide-04.png'><img src='img/slide-thumb-04.png'></img></a></td>
+<td>
+<p>
+This is a traditional web application, which has two NGINX servers,
+two Python app servers and two PostgreSQL servers.
+
+<p>
+The question is <b>how many log files this stack contains?</b>
+<p>
+Let me count them up.
+First we have two access logs from NGINX of course, we have two app
+logs from Python application and two database logs from PostgreSQL.
+</td>
+</tr>
+<tr>
+<td><a href='img/slide-05.png'><img src='img/slide-thumb-05.png'></img></a></td>
+<td>
+<p>
+So we have at least six log files, all of which we need to monitor carefully,
+or we'll miss serious incidents like connection limit exceeded,
+exception occurred and database replication failed etc.
+<p>
+It's already not a quite trivial task to monitor them properly.
+But things get better.
+</td>
+</tr>
+<tr>
+<td><a href='img/slide-06.png'><img src='img/slide-thumb-06.png'></img></a></td>
+<td>
+<p>
+It's age of micro services and virtualisation. Now you can
+literally have a dozen of severs just to run a single application,
+and every server emits log files independently with each other. 
+<p>
+In this slide now you have thirty six logs to manage, since you have six
+micro applications and each emits six logs.
+<p>
+How do you monitor them?
+</td>
+</tr>
+<tr>
+<td><a href='img/slide-07.png'><img src='img/slide-thumb-07.png'></img></a></td>
+<td>
+<p>
+<p>
+It's no wonder that everyone suddenly rushes to log management solutions
+like Splunk, Elasticsearch, time series database like InfluxDB and
+message queues like Apache Kafka.
+<p>
+I'm sure that you are using one or two of them at work. I for one use
+them at work. They are indeed amazing products.
+</td>
+</tr>
+<tr>
+<td><a href='img/slide-08.png'><img src='img/slide-thumb-08.png'></img></a></td>
+<td>
+<p>
+But the remaining problem here is <i>"how do you send your logs to these products?"</i>
+Your log files do not transfer themselves to other servers, so you need to
+make it happen.
+<p>
+The question is "how".
+</td>
+</tr>
+<tr>
+<td><a href='img/slide-09.png'><img src='img/slide-thumb-09.png'></img></a></td>
+<td>
+<p>
+I summarize my points so far.
+<p>
+You have a large amount of log data at one hand, and  you have amazing log management
+solutions at another hand. What is missing is a pipeline to connect them.
+</td>
+</table>
+<h2 id='solution'><a href='#solution'>Solution</a></h2>
+<table>
+</tr>
+<tr>
+<td><a href='img/slide-10.png'><img src='img/slide-thumb-10.png'></img></a></td>
+<td>
+<p>
+We develop Fluent Bit to solve this problem.
+
+<p>
+Fluent Bit is a program that can talk a number of protocols and let you transfer
+data to log managers very easily.
+</td>
+</tr>
+<tr>
+<td><a href='img/slide-11.png'><img src='img/slide-thumb-11.png'></img></a></td>
+<td>
+<p>
+For example, it can speak Kafka protocol, so you can use Fluent Bit as a pipe
+to connect your data source to a Kafka cluster. Also it can speak Elasticsearch
+protocol, so you can ship logs into your Elasticsearch server.
+<p>
+Fluent Bit supports more than twenty types of outputs, and twenty types of
+inputs. Thus, it is pretty much capable.
+</td>
+</tr>
+<tr>
+<td><a href='img/slide-12.png'><img src='img/slide-thumb-12.png'></img></a></td>
+<td>
+<p>
+At this point, you may wonder "Isn't that what Fluentd exactly does?
+What is the difference with Fluentd?"
+<p>
+The keyword is "efficiency".
+
+<p>
+As you may know, Fluentd is written in Ruby. It's great and very convenient
+language but quite slower to run than compiled languages like C.
+Since Fluent Bit is written in C, it can process a lot more data efficiently
+than Fluentd.
+</td>
+</tr>
+<tr>
+<td><a href='img/slide-13.png'><img src='img/slide-thumb-13.png'></img></a></td>
+<td>
+<p>
+This table illustrates the difference between them. Blue is Fluent Bit,
+gray is Fluentd and Y-axis is the lines processed per second (the higher,
+the better).
+<p>
+Talking about LTSV, Fluent Bit can process two times more data per second,
+so pretty much faster than Fluentd.
+<p>
+Even with JSON, which Fluentd has a quite optimized parser for,
+but still Fluent Bit outperforms Fluentd by twenty or thirty percent.
+</td>
+</tr>
+<tr>
+<td><a href='img/slide-14.png'><img src='img/slide-thumb-14.png'></img></a></td>
+<td>
+<p>
+The summary so far is:
+<ul>
+<li>Fluent Bit is a very convenient log shipper.
+<li>It can transfer your logs to a number of services.
+<li>It's very efficient because of written in C.
+</td>
+</tr>
+<tr>
+</table>
+
+<h2 id='windows'><a href='#windows'>Status of Windows Port</a></h2>
+<table>
+<td><a href='img/slide-15.png'><img src='img/slide-thumb-15.png'></img></a></td>
+<td>
+<p>
+So this is the main part.
+<p>
+First I'd like to talk a bit about the history of Fluent Bit.
+<p>
+I'd like to start by telling that Fluent Bit was initially developed only for Linux, indeed only for embedded Linux at first.
+
+</td>
+</tr>
+<tr>
+<td><a href='img/slide-16.png'><img src='img/slide-thumb-16.png'></img></a></td>
+<td>
+<p>
+<p>Five years ago, in the initial commit of Fluent Bit, the readme said "Fluent Bit is a collection tool designed for Embedded Linux that collects Kernel messages and Hardware metrics".
+<p>So that was the start. It was meant to be for Embedded Linux.
+
+</td>
+</tr>
+<tr>
+<td><a href='img/slide-17.png'><img src='img/slide-thumb-17.png'></img></a></td>
+<td>
+<p>
+Since then, we got full Linux support, OSX support and BSD support in 2015.
+<p>
+We have also expand the supported architectures. Notably we have now full
+support for ARM 64 since two years ago.
+<p>
+And this year we've gotten Fluent Bit to run on Windows.
+</td>
+</tr>
+<tr>
+<td><a href='img/slide-18.png'><img src='img/slide-thumb-18.png'></img></a></td>
+<td>
+<p>
+So what is the current status of Windows support? The porting project started
+the last December, so we have roughly six month's work.
+<p>
+It actually came along very smoothly. We've done porting most of core engine,
+and around third of plugins are working.
+<p>
+It's still quite an early stage, but the Windows port is already usable.
+</td>
+</tr>
+<tr>
+<td><a href='img/slide-19.png'><img src='img/slide-thumb-19.png'></img></a></td>
+<td>
+<p>
+More specifically, the works we've done are: 1) we made it possible to
+compile Fluent Bit on MSVC, 2) and enabled to launch Fluent Bit from PowerShell.
+<p>
+3) We've done porting twenty plugins to Windows, 4) and Installers are also available
+in two flavours: EXE and ZIP, which make installation pretty much trivial.
+</td>
+</tr>
+<tr>
+</table>
+
+<h2 id='tutorial'><a href='#tutorial'>Tutorial for Windows Users</a></h2>
+<table>
+<td><a href='img/slide-20.png'><img src='img/slide-thumb-20.png'></img></a></td>
+<td>
+<p>
+So I want to explain how you can use Fluent Bit today.
+<p>
+This is very easy indeed, so I'd like to show how to do that in a step-by-step manner.
+</td>
+</tr>
+<tr>
+<td><a href='img/slide-21.png'><img src='img/slide-thumb-21.png'></img></a></td>
+<td>
+<p>
+Let me first set up some context.
+<p>
+Suppose you have some application running on Windows and
+the application outputs its logs to "C:\\log\app.log", and
+you also have Kafka cluster as a central message bus.
+<p>
+The task is to transfer the log file from Windows to Kafka.
+<p>
+Using Fluent Bit, we can set up such a pipeline just in three steps.
+</td>
+</tr>
+<tr>
+<td><a href='img/slide-22.png'><img src='img/slide-thumb-22.png'></img></a></td>
+<td>
+<p>
+First, download the ZIP installer. We have EXE and ZIP installers as I said,
+and ZIP is easier for quick testing, so I use the one here.
+<p>
+We build installers for each commit on AppVeyor. You can download from there
+if you want the latest one.
+<p>
+Open the link on your browser and just click and save it.
+</td>
+</tr>
+<tr>
+<td><a href='img/slide-23.png'><img src='img/slide-thumb-23.png'></img></a></td>
+<td>
+<p>
+Next, expand the ZIP archive.
+<p>
+You need to just click the ZIP archive and select "Expand All" on Explorer
+or you can use the "Expand-Archive" commandlet on PowerShell.
+<p>
+Both work fine, so choose the one you like.
+</td>
+</tr>
+<tr>
+<td><a href='img/slide-24.png'><img src='img/slide-thumb-24.png'></img></a></td>
+<td>
+<p>
+Then open PowerShell and just launch Fluent Bit.
+<p>
+The ZIP file contains fluent-bit.exe which is a stand-alone binary.
+As you can see in the slide, it is included in the bin directory 
+</td>
+</tr>
+<tr>
+<td><a href='img/slide-25.png'><img src='img/slide-thumb-25.png'></img></a></td>
+<td>
+<p>
+As I said, the target log file is stored in "C:\\logs\app.log".
+<p>
+We use tail plugin as an input, and set the path accordingly.
+</td>
+</tr>
+<tr>
+<td><a href='img/slide-26.png'><img src='img/slide-thumb-26.png'></img></a></td>
+<td>
+<p>
+And we assumed that the output is Apache Kafka.
+<p>
+We use the Kafka output plugin, set broker's IP address
+and tell Fluent Bit to send the data with "windows" topic
+<p>
+That's it! You should see log lines running to your Kafka server.
+<p>
+Alternatively, you can create a configuration file and feed it to Fluent Bit
+via "-c" option. You can download a sample configuration file
+<a href='sample.conf'>here.</a>
+
+</td>
+</tr>
+<tr>
+<td><a href='img/slide-27.png'><img src='img/slide-thumb-27.png'></img></a></td>
+<td>
+<p>
+The summary is:
+<ol>
+<li>Download the ZIP archive.
+<li>Unzip it.
+<li>Run the executable.
+</ol>
+<p>
+This is all that you need, Please try at home if you have some interest
+in Fluent Bit, and please give us some feedback.
+</td>
+</tr>
+</table>
+
+<h2 id='future'><a href='#future'>Future</a></h2>
+<table>
+<tr>
+<td><a href='img/slide-28.png'><img src='img/slide-thumb-28.png'></img></a></td>
+<td>
+<p>
+So this is status of our efforts to make Fluent Bit Windows-compatible log
+shipping solution.
+<p>
+I'd like to finish my talk with sharing some ideas of future development.
+</td>
+</tr>
+<tr>
+<td><a href='img/slide-29.png'><img src='img/slide-thumb-29.png'></img></a></td>
+<td>
+<p>
+First I'm planning to port the remaining thirty two plugins to Windows as
+much as possible.
+<p>
+As to the plugin, we are right now working on a plugin for Windows Event Log
+which should be useful for Windows administrators.
+<p>
+And I'm planning to add more documents, since it's kinda sparse right now.
+</td>
+</tr>
+<tr>
+<td><a href='img/slide-30.png'><img src='img/slide-thumb-30.png'></img></a></td>
+<td>
+<p>
+And we need feedbacks from users!
+<p>
+What is your use case? Which service do you want to connect to?
+If you have idea please tell us on the issue tracker on GitHub.
+I'd like to hear from you.
+<p>
+Thank you.
+</td>
+</tr>
+</table>
+
+<hr>
+<p><a href="../index.html">Back to ceptord.net</a>
+
+</body>
+</html>
