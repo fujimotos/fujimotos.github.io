@@ -18,9 +18,8 @@
 # -- Project information -----------------------------------------------------
 
 project = 'ceptord.net'
-copyright = '2022, Fujimoto Seiji'
+copyright = '2011-2022, Fujimoto Seiji'
 author = 'Fujimoto Seiji'
-
 
 # -- General configuration ---------------------------------------------------
 
@@ -38,13 +37,21 @@ templates_path = ['_templates']
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
 
-
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'alabaster'
+html_theme = 'furo'
+html_title = 'Notes on Levenshtein Distance'
+html_css_files = ['custom.css']
+html_favicon = '_static/favicon.ico'
+html_logo    = '_static/logo.png'
+html_baseurl = 'https://ceptord.net/'
+
+html_theme_options = {
+  "sidebar_hide_name": True
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
