@@ -12,6 +12,10 @@ BUILDDIR      = build
 help:
 	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
+dist: html
+	rm -rf docs
+	mv build/html docs
+
 .PHONY: help Makefile
 
 # Catch-all target: route all unknown targets to Sphinx using the new

@@ -1,0 +1,342 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="author" title="About these documents" href="#" /><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="prev" title="TinyFastSS – An Implementatin of FastSS" href="tinyfss/index.html" />
+
+    <link rel="shortcut icon" href="_static/favicon.ico"/><meta name="generator" content="sphinx-4.4.0, furo 2022.01.02"/>
+        <title>Fujimoto Seiji - Notes on Levenshtein Distance</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=df49af52631e7917044a9c21a57f7b83170a6dd0" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=fade93df149f7c5fedb3ff897f799dc7d283b420" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  body[data-theme="dark"] {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    body:not([data-theme="light"]) {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+</style></head>
+  <body>
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" />
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">Notes on Levenshtein Distance</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand centered" href="index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="_static/logo.png" alt="Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Research</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="wagner-fischer/index.html">Can We Optimize the Wagner-Fischer Algorithm?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="20200815-Comparison.html">Wagner-Fischer vs Myers’ Algorithm</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Software</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="20181215-polyleven.html">Polyleven – Fast Pythonic Levenshtein Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="20191127-charec.html">Charec – Handwriting Recognition with Levenshtein Distance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fastcomp/index.html">mbleven – A fast algorithm for bounded edit distance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tinyfss/index.html">TinyFastSS – An Implementatin of FastSS</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Misc</span></p>
+<ul class="current">
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Fujimoto Seiji</a></li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <div class="section" id="fujimoto-seiji">
+<h1>Fujimoto Seiji<a class="headerlink" href="#fujimoto-seiji" title="Permalink to this headline">¶</a></h1>
+<p>Fujimoto Seij is a director of <a class="reference external" href="https://www.clear-code.com/">ClearCode Inc.</a> – a small Japanese software company with focus on Free/Open Source Software.</p>
+<p>Here is a list of my major projects:</p>
+<div class="table-wrapper"><table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 28%"/>
+<col style="width: 15%"/>
+<col style="width: 57%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Project Name</p></th>
+<th class="head"><p>Year</p></th>
+<th class="head"><p>Desciption</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference external" href="https://github.com/fujimotos/TinyFastSS">TinyFastSS</a></p></td>
+<td><p>2012</p></td>
+<td><p>A fast data structure for fuzzy string search.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/fujimotos/polyleven">Polyleven</a></p></td>
+<td><p>2018</p></td>
+<td><p>A fast Pythonic Levenshtein library.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://github.com/fluent/fluentd">Flunetd</a></p></td>
+<td><p>2018-</p></td>
+<td><p>Log shipper daemon in Ruby/Comitter</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/FlexConfirmMail/">FlexConfirmMail</a></p></td>
+<td><p>2020-</p></td>
+<td><p>Addon suite for corporate mail management</p></td>
+</tr>
+</tbody>
+</table></div>
+<p>My past talks:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="20190717-FluentdMeetup.html"><span class="doc">The State of Windows Support in Fluent Bit</span></a> (2019-07-17)</p></li>
+<li><p><a class="reference download internal" download="" href="_downloads/212f8cf890722661e0064104fd08ca9f/20211104-fluentd.pdf"><code class="xref download docutils literal notranslate"><span class="pre">Fluentd/Fluent</span> <span class="pre">Bitで実現する楽なKubernetesのログ運用</span></code></a> (2021-11-04)</p></li>
+</ul>
+<div class="section" id="books">
+<h2>Books<a class="headerlink" href="#books" title="Permalink to this headline">¶</a></h2>
+<p>Talking about private stuffs, my biggest passion is <em>books</em>. I mean I read books. A LOT.</p>
+<p>Here is some book recommendations:</p>
+<dl class="simple">
+<dt>Primo Levi “If this is a Man” (1947)</dt><dd><p>Everything by Levi is worth reading. He is a stunningly honest writer with a genuine message to tell the world. I also strongly recommend his last work “The Drowned and the Saved” (1986).</p>
+</dd>
+<dt>Svetlana Alexievich “Secondhand Time” (2013)</dt><dd><p>Alexievich is a modern genius. Basically she single-handedly created a whole new poetic frontier that is called “polyphonic writings”. I didn’t thought such a literary expression even can be possible until her work.</p>
+</dd>
+<dt>James Tiptree Jr “The Girl Who Was Plugged In” (1974)</dt><dd><p>I cannot overstate how much I love her works. Her novels often go for a kind of frantic courage, where the protagonist makes a desperate effort to fight the inhuman System, nonetheless the odds being slim, because, you know, we human have souls to be saved.</p>
+</dd>
+<dt>E.T. Cook “Florence Nightingale” (1913)</dt><dd><p>I first learned about Florence Nightingale thorough a notorious book “Florence Nightingale: Avenging Angel” by Hugh Small. It was an astonishing read for me, because, even through the lenses of her foes, Nightingale seems like a real intellectual giant.</p>
+</dd>
+<dt>Herodotus “Histories” (BC500?)</dt><dd><p>I really wish that there were a dozen of Herodotus instead of one. His work is rich in knowledge, sometimes bogus (in Book 3, he talks about <a class="reference external" href="https://en.wikipedia.org/wiki/Gold-digging_ant">dog-sized furry ants</a>) and totally enjoyable.</p>
+</dd>
+</dl>
+<p>Other works I liked:</p>
+<ul class="simple">
+<li><p>Dan Charles “Lords Of The Harvest” (2003)</p></li>
+<li><p>Richard Bookstaber “A Demon of Our Own Design” (2007)</p></li>
+<li><p>Philip Reeve “Here Lies Arthur” (2007)</p></li>
+<li><p>Kazuo Ishiguro “The Remains of the Day” (1989)</p></li>
+</ul>
+<p>If you’re into Japanese poetry, here is the finest one in my opinion:</p>
+<blockquote class="epigraph">
+<div><p>踊り場に 幾度も揺れた 影たちが 私と共に 消える三月</p>
+<p class="attribution">—野口あや子</p>
+</div></blockquote>
+</div>
+<div class="section" id="now-what">
+<h2>Now what?<a class="headerlink" href="#now-what" title="Permalink to this headline">¶</a></h2>
+<p>I’m actively seeking new interesting projects. If you have something you want work on with me, please make a contact to me.</p>
+<ul class="simple">
+<li><p>Please just send a message to <a class="reference external" href="mailto:fujimoto%40ceptord.net">fujimoto<span>@</span>ceptord<span>.</span>net</a>.</p></li>
+<li><p>Alternatively I use <a class="reference external" href="https://signal.org">Signal</a> for casual communication, so please contact me via signalapp (assuming you know my phone number ;-))</p></li>
+</ul>
+</div>
+</div>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          <a class="prev-page" href="tinyfss/index.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">TinyFastSS – An Implementatin of FastSS</div>
+                
+              </div>
+            </a>
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2011-2022, Fujimoto Seiji |
+          Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+          <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            | <a class="muted-link" href="_sources/about.rst.txt"
+               rel="nofollow">
+              Show Source
+            </a>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Fujimoto Seiji</a><ul>
+<li><a class="reference internal" href="#books">Books</a></li>
+<li><a class="reference internal" href="#now-what">Now what?</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/scripts/furo.js"></script>
+    </body>
+</html>

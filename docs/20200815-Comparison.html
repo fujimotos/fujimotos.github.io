@@ -1,0 +1,375 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="author" title="About these documents" href="about.html" /><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Polyleven – Fast Pythonic Levenshtein Library" href="20181215-polyleven.html" /><link rel="prev" title="Can We Optimize the Wagner-Fischer Algorithm?" href="wagner-fischer/index.html" />
+
+    <link rel="shortcut icon" href="_static/favicon.ico"/><meta name="generator" content="sphinx-4.4.0, furo 2022.01.02"/>
+        <title>Wagner-Fischer vs Myers’ Algorithm - Notes on Levenshtein Distance</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=df49af52631e7917044a9c21a57f7b83170a6dd0" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=fade93df149f7c5fedb3ff897f799dc7d283b420" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  body[data-theme="dark"] {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    body:not([data-theme="light"]) {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+</style></head>
+  <body>
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" />
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">Notes on Levenshtein Distance</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand centered" href="index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="_static/logo.png" alt="Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Research</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="wagner-fischer/index.html">Can We Optimize the Wagner-Fischer Algorithm?</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Wagner-Fischer vs Myers’ Algorithm</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Software</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="20181215-polyleven.html">Polyleven – Fast Pythonic Levenshtein Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="20191127-charec.html">Charec – Handwriting Recognition with Levenshtein Distance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fastcomp/index.html">mbleven – A fast algorithm for bounded edit distance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tinyfss/index.html">TinyFastSS – An Implementatin of FastSS</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Misc</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="about.html">Fujimoto Seiji</a></li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <div class="section" id="wagner-fischer-vs-myers-algorithm">
+<h1>Wagner-Fischer vs Myers’ Algorithm<a class="headerlink" href="#wagner-fischer-vs-myers-algorithm" title="Permalink to this headline">¶</a></h1>
+<dl class="field-list simple">
+<dt class="field-odd">Author</dt>
+<dd class="field-odd"><p>Fujimoto Seiji</p>
+</dd>
+<dt class="field-even">Published</dt>
+<dd class="field-even"><p>2020-08-15</p>
+</dd>
+<dt class="field-odd">Copyright</dt>
+<dd class="field-odd"><p>This document has been placed in the public domain.</p>
+</dd>
+</dl>
+<div class="section" id="abstract">
+<h2>Abstract<a class="headerlink" href="#abstract" title="Permalink to this headline">¶</a></h2>
+<p>This article compares the two most common algorithms for computing
+Levenshtein Distance.</p>
+<ul class="simple">
+<li><p>Wagner-Fischer Algorithm (1974) <a class="reference internal" href="wagner-fischer/index.html#wagner1974" id="id1"><span>[Wagner1974]</span></a></p></li>
+<li><p>Myers’ Bit-parallel Algorithm (1999) <a class="reference internal" href="#myers1999" id="id2"><span>[Myers1999]</span></a></p></li>
+</ul>
+<p>The key result is that Myers’ algorithm almost always outperforms
+the Wagner-Fischer algorithm (the exception is very short inputs
+of <code class="docutils literal notranslate"><span class="pre">length</span> <span class="pre">&lt;</span> <span class="pre">6</span></code>).  The performance difference becomes striking
+when input strings become longer.</p>
+<div class="figure align-default" id="id4">
+<a class="reference internal image-reference" href="_images/benchmark.svg"><img alt="_images/benchmark.svg" src="_images/benchmark.svg" width="600"/></a>
+<p class="caption"><span class="caption-text">Comparison of Wagner-Fischer vs Myers Algorithm</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="introduction">
+<h2>1. Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>Algorithm selection is the corner-stone of problem solving. It can
+result in a major difference in performance depending on which
+algorithm is applied. Yet, the empirical evidence on which algorithm
+should be applied (and when) is often limited.</p>
+<p>To fill the gap, I wrote an implementation of the Wagner-Fischer
+algorithm and Myers’ bit-parallel algorithm, and tested each
+implementation against the same data set.</p>
+<p>The test data is random hex strings ranging from 2 characters to
+64 characters. The computation time was measured by processing 1
+million pairs of strings.</p>
+</div>
+<div class="section" id="result">
+<h2>2. Result<a class="headerlink" href="#result" title="Permalink to this headline">¶</a></h2>
+<p>The figure 1 above shows the raw result data. The figure 2 below
+shows the same result using a log scale, to better illustrate the
+performance difference for shorter strings.</p>
+<p>The “break-even” point seems to be six characters. Longer than
+that, Myers’s algorithm works better than the Wagner-Fischer
+algorithm. Shorter than that, the converse holds true.</p>
+<div class="figure align-default" id="id5">
+<a class="reference internal image-reference" href="_images/benchmark-log.svg"><img alt="_images/benchmark-log.svg" src="_images/benchmark-log.svg" width="600"/></a>
+<p class="caption"><span class="caption-text">Comparison of Wagner-Fischer vs Myers Algorithm (logscale)</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+</div>
+<p>The numbers are retrieved on Intel Xeon(R) E5-2660 (2.60Ghz) with
+GCC 8.3.0.</p>
+<p>You can download the benchmark script from <a class="reference download internal" download="" href="_downloads/5b6d23d8b798b7137ef483a38895eca2/benchmark.c"><code class="xref download docutils literal notranslate"><span class="pre">benchmark.c</span></code></a>
+and run it as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cc -o benchmark -O2 benchmark.c
+$ ./benchmark
+</pre></div>
+</div>
+</div>
+<div class="section" id="implementation-notes">
+<h2>3. Implementation Notes<a class="headerlink" href="#implementation-notes" title="Permalink to this headline">¶</a></h2>
+<p>To the Wagner-Fischer algorithm, I applied Ukkonen’s optimization
+to improve the performance. My article <a class="reference internal" href="wagner-fischer/index.html"><span class="doc">Can We Optimize the Wagner-Fischer Algorithm?</span></a>
+contains a detailed explanation of this technique. To my knowledge,
+this is the best generic implementation of this algorithm.</p>
+<p>To Myers’ bit-parallel algorithm, I applied an unpublished
+optimization technique to speed up the computation. In particular,
+the original paper <a class="reference internal" href="#myers1999" id="id3"><span>[Myers1999]</span></a> required the computation of a lookup
+table for every alphabet (e.g. 52 letters for ASCII alphabets, or
+10k+ letters for Unicode). This requirement is often impractical for
+real-world applications.</p>
+<p>The basic idea of my improvement is that the lookup table can be
+pre-computed in <span class="math notranslate nohighlight">\(O(n)\)</span> time, rather than <span class="math notranslate nohighlight">\(O(Σ)\)</span>, where n is the length
+of strings and <span class="math notranslate nohighlight">\(Σ\)</span> is the total number of alphabets. I found this
+technique adds a good speedup to the algorithm (See <a class="reference external" href="https://github.com/fujimotos/polyleven/commit/82a08e04">82a08e04</a> for details).</p>
+</div>
+<div class="section" id="references">
+<h2>4. References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<dl class="citation">
+<dt class="label" id="wagner1974"><span class="brackets"><a class="fn-backref" href="#id1">Wagner1974</a></span></dt>
+<dd><p>Wagner, Robert A., and Michael J. Fischer. “The string-to-
+string correction problem.” Journal of the ACM 21.1 (1974):
+168-173.
+<a class="reference external" href="https://dl.acm.org/doi/pdf/10.1145/321796.321811">https://dl.acm.org/doi/pdf/10.1145/321796.321811</a></p>
+</dd>
+<dt class="label" id="myers1999"><span class="brackets">Myers1999</span><span class="fn-backref">(<a href="#id2">1</a>,<a href="#id3">2</a>)</span></dt>
+<dd><p>Myers, Gene. “A fast bit-vector algorithm for approximate
+string matching based on dynamic programming.” Journal of
+ACM (JACM) 46.3 (1999): 395-415.
+<a class="reference external" href="https://core.ac.uk/download/pdf/189740935.pdf">https://core.ac.uk/download/pdf/189740935.pdf</a></p>
+</dd>
+</dl>
+</div>
+</div>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="20181215-polyleven.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Polyleven – Fast Pythonic Levenshtein Library</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="wagner-fischer/index.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Can We Optimize the Wagner-Fischer Algorithm?</div>
+                
+              </div>
+            </a>
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2011-2022, Fujimoto Seiji |
+          Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+          <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            | <a class="muted-link" href="_sources/20200815-Comparison.rst.txt"
+               rel="nofollow">
+              Show Source
+            </a>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Wagner-Fischer vs Myers’ Algorithm</a><ul>
+<li><a class="reference internal" href="#abstract">Abstract</a></li>
+<li><a class="reference internal" href="#introduction">1. Introduction</a></li>
+<li><a class="reference internal" href="#result">2. Result</a></li>
+<li><a class="reference internal" href="#implementation-notes">3. Implementation Notes</a></li>
+<li><a class="reference internal" href="#references">4. References</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/scripts/furo.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    </body>
+</html>

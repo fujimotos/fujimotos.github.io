@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+<title>Charec - Handwriting recognition demo</title>
+<script src='./charec.js'></script>
+<script>
+window.addEventListener('load', function(){
+var $canvas = document.getElementById('board');
+var $output = document.getElementById('output');
+var $reset = document.getElementById('reset');
+var charlec = new Charlec($canvas, $output, $reset);
+});
+</script>
+<style>
+body {font-family: sans-serif;}
+canvas {
+  background:#f3f3f3;
+  border: 2px solid #777;
+  display: inline-block;
+  touch-action:none;
+}
+#answer {
+  font-size:20px;
+  font-weight:bold;
+}
+</style>
+</head>
+<body lang='en'>
+
+<h1>Charec - Handwriting recognition demo</h1>
+
+<p>Write a numeric character (1 - 9) and see the recognition output.
+
+<p id='answer'>
+<button id='reset'>Reset canvas</button>
+You wrote: <span id='output'></span>
+
+
+<div width=0%>
+  <canvas id='board' height=350 width=350></canvas>
+</div>
+
+<hr>
+<p>Last Modified: 2017-10-06<br>
+<a href='../../20191127-charec.html'>Back to article</a>
+</body>
+</html>

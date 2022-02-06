@@ -1,0 +1,613 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="author" title="About these documents" href="about.html" /><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" />
+
+    <link rel="shortcut icon" href="_static/favicon.ico"/><meta name="generator" content="sphinx-4.4.0, furo 2022.01.02"/>
+        <title>The State of Windows Support in Fluent Bit - Notes on Levenshtein Distance</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=df49af52631e7917044a9c21a57f7b83170a6dd0" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=fade93df149f7c5fedb3ff897f799dc7d283b420" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  body[data-theme="dark"] {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    body:not([data-theme="light"]) {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+</style></head>
+  <body>
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" />
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">Notes on Levenshtein Distance</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand centered" href="index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="_static/logo.png" alt="Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Research</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="wagner-fischer/index.html">Can We Optimize the Wagner-Fischer Algorithm?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="20200815-Comparison.html">Wagner-Fischer vs Myers’ Algorithm</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Software</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="20181215-polyleven.html">Polyleven – Fast Pythonic Levenshtein Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="20191127-charec.html">Charec – Handwriting Recognition with Levenshtein Distance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fastcomp/index.html">mbleven – A fast algorithm for bounded edit distance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tinyfss/index.html">TinyFastSS – An Implementatin of FastSS</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Misc</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="about.html">Fujimoto Seiji</a></li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <div class="section" id="the-state-of-windows-support-in-fluent-bit">
+<h1>The State of Windows Support in Fluent Bit<a class="headerlink" href="#the-state-of-windows-support-in-fluent-bit" title="Permalink to this headline">¶</a></h1>
+<dl class="field-list simple">
+<dt class="field-odd">Author</dt>
+<dd class="field-odd"><p>Fujimoto Seiji</p>
+</dd>
+<dt class="field-even">Published</dt>
+<dd class="field-even"><p>2019-07-17</p>
+</dd>
+<dt class="field-odd">Copyright</dt>
+<dd class="field-odd"><p>This document has been placed in the public domain.</p>
+</dd>
+</dl>
+<p>This is my talk given on July 17 2019 at Fluentd Meetup,
+a collocated event of <a class="reference external" href="https://events.linuxfoundation.org/events/open-source-summit-japan-2019/">Open Source Summit Tokyo 2019</a></p>
+<p>Many thanks to Eduardo Silva and Masahiro Nakagawa for inviting me to talk.</p>
+<div class="section" id="introduction">
+<h2>1. Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<div class="table-wrapper"><table class="docutils align-default">
+<colgroup>
+<col style="width: 50%"/>
+<col style="width: 50%"/>
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="figure align-default">
+<img alt="_images/slide-thumb-01.png" src="_images/slide-thumb-01.png"/>
+</div>
+</td>
+<td><p>I’m an engineer from ClearCode Inc. and right now working on the project to port Fluent Bit to Windows.</p>
+<p>Today I want to provide a general introduction of Fluent Bit and talk about the state of Windows support I’m working on.</p>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="section" id="log-management-problem">
+<h2>2. Log management problem<a class="headerlink" href="#log-management-problem" title="Permalink to this headline">¶</a></h2>
+<div class="table-wrapper"><table class="docutils align-default">
+<colgroup>
+<col style="width: 50%"/>
+<col style="width: 50%"/>
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="figure align-default">
+<img alt="_images/slide-thumb-03.png" src="_images/slide-thumb-03.png"/>
+</div>
+</td>
+<td><p>Let me start by saying that we have tons and tons of log data to manage,
+We have logs from app servers, logs from database servers, logs from
+proxy servers and so on.</p>
+<p>And the amount of logs is increasing very rapidly each year.</p>
+</td>
+</tr>
+<tr class="row-even"><td><div class="figure align-default">
+<img alt="_images/slide-thumb-04.png" src="_images/slide-thumb-04.png"/>
+</div>
+</td>
+<td><p>This is a traditional web application, which has two NGINX servers,
+two Python app servers and two PostgreSQL servers.</p>
+<p>The question is <strong>how many log files this stack contains?</strong>
+Let me count them up.
+First we have two access logs from NGINX of course, we have two app
+logs from Python application and two database logs from PostgreSQL.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="figure align-default">
+<img alt="_images/slide-thumb-05.png" src="_images/slide-thumb-05.png"/>
+</div>
+</td>
+<td><p>So we have at least six log files, all of which we need to monitor carefully,
+or we’ll miss serious incidents like connection limit exceeded,
+exception occurred and database replication failed etc.</p>
+<p>It’s already not a quite trivial task to monitor them properly.
+But things get better.</p>
+</td>
+</tr>
+<tr class="row-even"><td><div class="figure align-default">
+<img alt="_images/slide-thumb-06.png" src="_images/slide-thumb-06.png"/>
+</div>
+</td>
+<td><p>It’s age of micro services and virtualisation. Now you can
+literally have a dozen of severs just to run a single application,
+and every server emits log files independently with each other.</p>
+<p>In this slide now you have thirty six logs to manage, since you have six
+micro applications and each emits six logs.</p>
+<p>How do you monitor them?</p>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="figure align-default">
+<img alt="_images/slide-thumb-07.png" src="_images/slide-thumb-07.png"/>
+</div>
+</td>
+<td><p>It’s no wonder that everyone suddenly rushes to log management solutions
+like Splunk, Elasticsearch, time series database like InfluxDB and
+message queues like Apache Kafka.</p>
+<p>I’m sure that you are using one or two of them at work. I for one use
+them at work. They are indeed amazing products.</p>
+</td>
+</tr>
+<tr class="row-even"><td><div class="figure align-default">
+<img alt="_images/slide-thumb-08.png" src="_images/slide-thumb-08.png"/>
+</div>
+</td>
+<td><p>But the remaining problem here is <em>“how do you send your logs to these products?”</em>
+Your log files do not transfer themselves to other servers, so you need to make it happen.</p>
+<p>The question is “how”.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="figure align-default">
+<img alt="_images/slide-thumb-09.png" src="_images/slide-thumb-09.png"/>
+</div>
+</td>
+<td><p>I summarize my points so far.</p>
+<p>You have a large amount of log data at one hand, and  you have amazing log management solutions at another hand. What is missing is a pipeline to connect them.</p>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="section" id="fluent-bit-as-a-solution">
+<h2>3. Fluent Bit as a Solution<a class="headerlink" href="#fluent-bit-as-a-solution" title="Permalink to this headline">¶</a></h2>
+<div class="table-wrapper"><table class="docutils align-default">
+<colgroup>
+<col style="width: 50%"/>
+<col style="width: 50%"/>
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="figure align-default">
+<img alt="_images/slide-thumb-10.png" src="_images/slide-thumb-10.png"/>
+</div>
+</td>
+<td><p>We develop Fluent Bit to solve this problem.</p>
+<p>Fluent Bit is a program that can talk a number of protocols and let you transfer</p>
+</td>
+</tr>
+<tr class="row-even"><td><div class="figure align-default">
+<img alt="_images/slide-thumb-11.png" src="_images/slide-thumb-11.png"/>
+</div>
+</td>
+<td><p>For example, it can speak Kafka protocol, so you can use Fluent Bit as a pipe to connect your data source to a Kafka cluster. Also it can speak Elasticsearch protocol, so you can ship logs into your Elasticsearch server.</p>
+<p>Fluent Bit supports more than twenty types of outputs, and twenty types of inputs. Thus, it is pretty much capable.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="figure align-default">
+<img alt="_images/slide-thumb-12.png" src="_images/slide-thumb-12.png"/>
+</div>
+</td>
+<td><p>At this point, you may wonder “Isn’t that what Fluentd exactly does?  What is the difference with Fluentd?”</p>
+<p>The keyword is “efficiency”.</p>
+<p>As you may know, Fluentd is written in Ruby. It’s great and very convenient language but quite slower to run than compiled languages like C.  Since Fluent Bit is written in C, it can process a lot more data efficiently than Fluentd.</p>
+</td>
+</tr>
+<tr class="row-even"><td><div class="figure align-default">
+<img alt="_images/slide-thumb-13.png" src="_images/slide-thumb-13.png"/>
+</div>
+</td>
+<td><p>This table illustrates the difference between them. Blue is Fluent Bit, gray is Fluentd and Y-axis is the lines processed per second (the higher, the better).</p>
+<p>Talking about LTSV, Fluent Bit can process two times more data per second, so pretty much faster than Fluentd.</p>
+<p>Even with JSON, which Fluentd has a quite optimized parser for, but still Fluent Bit outperforms Fluentd by twenty or thirty percent.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="figure align-default">
+<img alt="_images/slide-thumb-14.png" src="_images/slide-thumb-14.png"/>
+</div>
+</td>
+<td><p>The summary so far is:</p>
+<ul class="simple">
+<li><p>Fluent Bit is a very convenient log shipper.</p></li>
+<li><p>It can transfer your logs to a number of services.</p></li>
+<li><p>It’s very efficient because of written in C.</p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="section" id="state-of-windows-support">
+<h2>4. State of Windows Support<a class="headerlink" href="#state-of-windows-support" title="Permalink to this headline">¶</a></h2>
+<div class="table-wrapper"><table class="docutils align-default">
+<colgroup>
+<col style="width: 50%"/>
+<col style="width: 50%"/>
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="figure align-default">
+<img alt="_images/slide-thumb-15.png" src="_images/slide-thumb-15.png"/>
+</div>
+</td>
+<td><p>So this is the main part.</p>
+<p>First I’d like to talk a bit about the history of Fluent Bit.</p>
+<p>I’d like to start by telling that Fluent Bit was initially developed only for Linux, indeed only for embedded Linux at first.</p>
+</td>
+</tr>
+<tr class="row-even"><td><div class="figure align-default">
+<img alt="_images/slide-thumb-16.png" src="_images/slide-thumb-16.png"/>
+</div>
+</td>
+<td><p>Five years ago, in the initial commit of Fluent Bit, the readme said “Fluent Bit is a collection tool designed for Embedded Linux that collects Kernel messages and Hardware metrics”.</p>
+<p>So that was the start. It was meant to be for Embedded Linux.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="figure align-default">
+<img alt="_images/slide-thumb-17.png" src="_images/slide-thumb-17.png"/>
+</div>
+</td>
+<td><p>Since then, we got full Linux support, OSX support and BSD support in 2015.
+We have also expand the supported architectures. Notably we have now full
+support for ARM 64 since two years ago.</p>
+<p>And this year we’ve gotten Fluent Bit to run on Windows.</p>
+</td>
+</tr>
+<tr class="row-even"><td><div class="figure align-default">
+<img alt="_images/slide-thumb-18.png" src="_images/slide-thumb-18.png"/>
+</div>
+</td>
+<td><p>So what is the current status of Windows support? The porting project started the last December, so we have roughly six month’s work.</p>
+<p>It actually came along very smoothly. We’ve done porting most of core engine, and around third of plugins are working.</p>
+<p>It’s still quite an early stage, but the Windows port is already usable.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="figure align-default">
+<img alt="_images/slide-thumb-19.png" src="_images/slide-thumb-19.png"/>
+</div>
+</td>
+<td><p>More specifically, the works we’ve done are: we made it possible to compile Fluent Bit on MSVC, and enabled to launch Fluent Bit from PowerShell.</p>
+<p>Also we’ve done porting twenty plugins to Windows, and installers are also available in two flavours: EXE and ZIP, which make installation pretty much trivial.</p>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="section" id="tutorial-for-windows-users">
+<h2>5. Tutorial for Windows Users<a class="headerlink" href="#tutorial-for-windows-users" title="Permalink to this headline">¶</a></h2>
+<div class="table-wrapper"><table class="docutils align-default">
+<colgroup>
+<col style="width: 50%"/>
+<col style="width: 50%"/>
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="figure align-default">
+<img alt="_images/slide-thumb-20.png" src="_images/slide-thumb-20.png"/>
+</div>
+</td>
+<td><p>So I want to explain how you can use Fluent Bit today.</p>
+<p>This is very easy indeed, so I’d like to show how to do that in a step-by-step manner.</p>
+</td>
+</tr>
+<tr class="row-even"><td><div class="figure align-default">
+<img alt="_images/slide-thumb-21.png" src="_images/slide-thumb-21.png"/>
+</div>
+</td>
+<td><p>Let me first set up some context.</p>
+<p>Suppose you have some application running on Windows and the application outputs its logs to <code class="file docutils literal notranslate"><span class="pre">C:\log\app.log</span></code>, and you also have Kafka cluster as a central message bus.</p>
+<p>The task is to transfer the log file from Windows to Kafka.</p>
+<p>Using Fluent Bit, we can set up such a pipeline just in three steps.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="figure align-default">
+<img alt="_images/slide-thumb-22.png" src="_images/slide-thumb-22.png"/>
+</div>
+</td>
+<td><p>First, download the ZIP installer. We have EXE and ZIP installers as I said, and ZIP is easier for quick testing, so I use the one here.</p>
+<p>We build installers for each commit on AppVeyor. You can download from there if you want the latest one.</p>
+<p>Open the link on your browser and just click and save it.</p>
+</td>
+</tr>
+<tr class="row-even"><td><div class="figure align-default">
+<img alt="_images/slide-thumb-23.png" src="_images/slide-thumb-23.png"/>
+</div>
+</td>
+<td><p>Next, expand the ZIP archive.</p>
+<p>You need to just click the ZIP archive and select “Expand All” on Explorer or you can use the “Expand-Archive” commandlet on PowerShell.</p>
+<p>Both work fine, so choose the one you like.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="figure align-default">
+<img alt="_images/slide-thumb-24.png" src="_images/slide-thumb-24.png"/>
+</div>
+</td>
+<td><p>Then open PowerShell and just launch Fluent Bit.</p>
+<p>The ZIP file contains fluent-bit.exe which is a stand-alone binary.  As you can see in the slide, it is included in the bin directory</p>
+</td>
+</tr>
+<tr class="row-even"><td><div class="figure align-default">
+<img alt="_images/slide-thumb-25.png" src="_images/slide-thumb-25.png"/>
+</div>
+</td>
+<td><p>As I said, the target log file is stored in <code class="file docutils literal notranslate"><span class="pre">C:\logs\app.log</span></code>.</p>
+<p>We use tail plugin as an input, and set the path accordingly.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="figure align-default">
+<img alt="_images/slide-thumb-26.png" src="_images/slide-thumb-26.png"/>
+</div>
+</td>
+<td><p>And we assumed that the output is Apache Kafka.</p>
+<p>We use the Kafka output plugin, set broker’s IP address and tell Fluent Bit to send the data with “windows” topic</p>
+<p>That’s it! You should see log lines running to your Kafka server.</p>
+<p>Alternatively, you can create a configuration file and feed it to Fluent Bit via <cite>-c</cite> option. You can download a sample configuration file here.</p>
+</td>
+</tr>
+<tr class="row-even"><td><div class="figure align-default">
+<img alt="_images/slide-thumb-27.png" src="_images/slide-thumb-27.png"/>
+</div>
+</td>
+<td><p>The summary is:</p>
+<ul class="simple">
+<li><p>Download the ZIP archive.</p></li>
+<li><p>Unzip it.</p></li>
+<li><p>Run the executable.</p></li>
+</ul>
+<p>This is all that you need. Please try at home if you have some interest in Fluent Bit, and please give us some feedback.</p>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="section" id="future-of-fluent-bit">
+<h2>6. Future of Fluent Bit<a class="headerlink" href="#future-of-fluent-bit" title="Permalink to this headline">¶</a></h2>
+<div class="table-wrapper"><table class="docutils align-default">
+<colgroup>
+<col style="width: 50%"/>
+<col style="width: 50%"/>
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="figure align-default">
+<img alt="_images/slide-thumb-28.png" src="_images/slide-thumb-28.png"/>
+</div>
+</td>
+<td><p>So this is status of our efforts to make Fluent Bit Windows-compatible log shipping solution.</p>
+<p>I’d like to finish my talk with sharing some ideas of future development.</p>
+</td>
+</tr>
+<tr class="row-even"><td><div class="figure align-default">
+<img alt="_images/slide-thumb-29.png" src="_images/slide-thumb-29.png"/>
+</div>
+</td>
+<td><p>First I’m planning to port the remaining thirty two plugins to Windows as much as possible.</p>
+<p>As to the plugin, we are right now working on a plugin for Windows Event Log which should be useful for Windows administrators.</p>
+<p>And I’m planning to add more documents, since it’s kinda sparse right now.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="figure align-default">
+<img alt="_images/slide-thumb-30.png" src="_images/slide-thumb-30.png"/>
+</div>
+</td>
+<td><p>And we need feedbacks from users!</p>
+<p>What is your use case? Which service do you want to connect to?  If you have idea please tell us on the issue tracker on GitHub.  I’d like to hear from you.</p>
+<p>Thank you.</p>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2011-2022, Fujimoto Seiji |
+          Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+          <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            | <a class="muted-link" href="_sources/20190717-FluentdMeetup.rst.txt"
+               rel="nofollow">
+              Show Source
+            </a>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">The State of Windows Support in Fluent Bit</a><ul>
+<li><a class="reference internal" href="#introduction">1. Introduction</a></li>
+<li><a class="reference internal" href="#log-management-problem">2. Log management problem</a></li>
+<li><a class="reference internal" href="#fluent-bit-as-a-solution">3. Fluent Bit as a Solution</a></li>
+<li><a class="reference internal" href="#state-of-windows-support">4. State of Windows Support</a></li>
+<li><a class="reference internal" href="#tutorial-for-windows-users">5. Tutorial for Windows Users</a></li>
+<li><a class="reference internal" href="#future-of-fluent-bit">6. Future of Fluent Bit</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/scripts/furo.js"></script>
+    </body>
+</html>
