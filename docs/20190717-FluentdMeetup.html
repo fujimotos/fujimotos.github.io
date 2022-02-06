@@ -2,7 +2,8 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="author" title="About these documents" href="about.html" /><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<link rel="author" title="About these documents" href="about.html" /><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" />
 
     <link rel="shortcut icon" href="_static/favicon.ico"/><meta name="generator" content="sphinx-4.4.0, furo 2022.01.02"/>
         <title>The State of Windows Support in Fluent Bit - Notes on Levenshtein Distance</title>
@@ -172,6 +173,7 @@
 <p class="caption" role="heading"><span class="caption-text">Misc</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="about.html">Fujimoto Seiji</a></li>
+<li class="toctree-l1"><a class="reference internal" href="citation.html">Citations</a></li>
 </ul>
 
 </div>
@@ -198,7 +200,7 @@
           </label>
         </div>
         <article role="main">
-          <div class="section" id="the-state-of-windows-support-in-fluent-bit">
+          <section id="the-state-of-windows-support-in-fluent-bit">
 <h1>The State of Windows Support in Fluent Bit<a class="headerlink" href="#the-state-of-windows-support-in-fluent-bit" title="Permalink to this headline">¶</a></h1>
 <dl class="field-list simple">
 <dt class="field-odd">Author</dt>
@@ -214,7 +216,7 @@
 <p>This is my talk given on July 17 2019 at Fluentd Meetup,
 a collocated event of <a class="reference external" href="https://events.linuxfoundation.org/events/open-source-summit-japan-2019/">Open Source Summit Tokyo 2019</a></p>
 <p>Many thanks to Eduardo Silva and Masahiro Nakagawa for inviting me to talk.</p>
-<div class="section" id="introduction">
+<section id="introduction">
 <h2>1. Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
 <div class="table-wrapper"><table class="docutils align-default">
 <colgroup>
@@ -222,9 +224,9 @@ a collocated event of <a class="reference external" href="https://events.linuxfo
 <col style="width: 50%"/>
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><div class="figure align-default">
+<tr class="row-odd"><td><figure class="align-default">
 <img alt="_images/slide-thumb-01.png" src="_images/slide-thumb-01.png"/>
-</div>
+</figure>
 </td>
 <td><p>I’m an engineer from ClearCode Inc. and right now working on the project to port Fluent Bit to Windows.</p>
 <p>Today I want to provide a general introduction of Fluent Bit and talk about the state of Windows support I’m working on.</p>
@@ -232,8 +234,8 @@ a collocated event of <a class="reference external" href="https://events.linuxfo
 </tr>
 </tbody>
 </table></div>
-</div>
-<div class="section" id="log-management-problem">
+</section>
+<section id="log-management-problem">
 <h2>2. Log management problem<a class="headerlink" href="#log-management-problem" title="Permalink to this headline">¶</a></h2>
 <div class="table-wrapper"><table class="docutils align-default">
 <colgroup>
@@ -241,9 +243,9 @@ a collocated event of <a class="reference external" href="https://events.linuxfo
 <col style="width: 50%"/>
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><div class="figure align-default">
+<tr class="row-odd"><td><figure class="align-default">
 <img alt="_images/slide-thumb-03.png" src="_images/slide-thumb-03.png"/>
-</div>
+</figure>
 </td>
 <td><p>Let me start by saying that we have tons and tons of log data to manage,
 We have logs from app servers, logs from database servers, logs from
@@ -251,9 +253,9 @@ proxy servers and so on.</p>
 <p>And the amount of logs is increasing very rapidly each year.</p>
 </td>
 </tr>
-<tr class="row-even"><td><div class="figure align-default">
+<tr class="row-even"><td><figure class="align-default">
 <img alt="_images/slide-thumb-04.png" src="_images/slide-thumb-04.png"/>
-</div>
+</figure>
 </td>
 <td><p>This is a traditional web application, which has two NGINX servers,
 two Python app servers and two PostgreSQL servers.</p>
@@ -263,9 +265,9 @@ First we have two access logs from NGINX of course, we have two app
 logs from Python application and two database logs from PostgreSQL.</p>
 </td>
 </tr>
-<tr class="row-odd"><td><div class="figure align-default">
+<tr class="row-odd"><td><figure class="align-default">
 <img alt="_images/slide-thumb-05.png" src="_images/slide-thumb-05.png"/>
-</div>
+</figure>
 </td>
 <td><p>So we have at least six log files, all of which we need to monitor carefully,
 or we’ll miss serious incidents like connection limit exceeded,
@@ -274,9 +276,9 @@ exception occurred and database replication failed etc.</p>
 But things get better.</p>
 </td>
 </tr>
-<tr class="row-even"><td><div class="figure align-default">
+<tr class="row-even"><td><figure class="align-default">
 <img alt="_images/slide-thumb-06.png" src="_images/slide-thumb-06.png"/>
-</div>
+</figure>
 </td>
 <td><p>It’s age of micro services and virtualisation. Now you can
 literally have a dozen of severs just to run a single application,
@@ -286,9 +288,9 @@ micro applications and each emits six logs.</p>
 <p>How do you monitor them?</p>
 </td>
 </tr>
-<tr class="row-odd"><td><div class="figure align-default">
+<tr class="row-odd"><td><figure class="align-default">
 <img alt="_images/slide-thumb-07.png" src="_images/slide-thumb-07.png"/>
-</div>
+</figure>
 </td>
 <td><p>It’s no wonder that everyone suddenly rushes to log management solutions
 like Splunk, Elasticsearch, time series database like InfluxDB and
@@ -297,18 +299,18 @@ message queues like Apache Kafka.</p>
 them at work. They are indeed amazing products.</p>
 </td>
 </tr>
-<tr class="row-even"><td><div class="figure align-default">
+<tr class="row-even"><td><figure class="align-default">
 <img alt="_images/slide-thumb-08.png" src="_images/slide-thumb-08.png"/>
-</div>
+</figure>
 </td>
 <td><p>But the remaining problem here is <em>“how do you send your logs to these products?”</em>
 Your log files do not transfer themselves to other servers, so you need to make it happen.</p>
 <p>The question is “how”.</p>
 </td>
 </tr>
-<tr class="row-odd"><td><div class="figure align-default">
+<tr class="row-odd"><td><figure class="align-default">
 <img alt="_images/slide-thumb-09.png" src="_images/slide-thumb-09.png"/>
-</div>
+</figure>
 </td>
 <td><p>I summarize my points so far.</p>
 <p>You have a large amount of log data at one hand, and  you have amazing log management solutions at another hand. What is missing is a pipeline to connect them.</p>
@@ -316,8 +318,8 @@ Your log files do not transfer themselves to other servers, so you need to make 
 </tr>
 </tbody>
 </table></div>
-</div>
-<div class="section" id="fluent-bit-as-a-solution">
+</section>
+<section id="fluent-bit-as-a-solution">
 <h2>3. Fluent Bit as a Solution<a class="headerlink" href="#fluent-bit-as-a-solution" title="Permalink to this headline">¶</a></h2>
 <div class="table-wrapper"><table class="docutils align-default">
 <colgroup>
@@ -325,43 +327,43 @@ Your log files do not transfer themselves to other servers, so you need to make 
 <col style="width: 50%"/>
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><div class="figure align-default">
+<tr class="row-odd"><td><figure class="align-default">
 <img alt="_images/slide-thumb-10.png" src="_images/slide-thumb-10.png"/>
-</div>
+</figure>
 </td>
 <td><p>We develop Fluent Bit to solve this problem.</p>
 <p>Fluent Bit is a program that can talk a number of protocols and let you transfer</p>
 </td>
 </tr>
-<tr class="row-even"><td><div class="figure align-default">
+<tr class="row-even"><td><figure class="align-default">
 <img alt="_images/slide-thumb-11.png" src="_images/slide-thumb-11.png"/>
-</div>
+</figure>
 </td>
 <td><p>For example, it can speak Kafka protocol, so you can use Fluent Bit as a pipe to connect your data source to a Kafka cluster. Also it can speak Elasticsearch protocol, so you can ship logs into your Elasticsearch server.</p>
 <p>Fluent Bit supports more than twenty types of outputs, and twenty types of inputs. Thus, it is pretty much capable.</p>
 </td>
 </tr>
-<tr class="row-odd"><td><div class="figure align-default">
+<tr class="row-odd"><td><figure class="align-default">
 <img alt="_images/slide-thumb-12.png" src="_images/slide-thumb-12.png"/>
-</div>
+</figure>
 </td>
 <td><p>At this point, you may wonder “Isn’t that what Fluentd exactly does?  What is the difference with Fluentd?”</p>
 <p>The keyword is “efficiency”.</p>
 <p>As you may know, Fluentd is written in Ruby. It’s great and very convenient language but quite slower to run than compiled languages like C.  Since Fluent Bit is written in C, it can process a lot more data efficiently than Fluentd.</p>
 </td>
 </tr>
-<tr class="row-even"><td><div class="figure align-default">
+<tr class="row-even"><td><figure class="align-default">
 <img alt="_images/slide-thumb-13.png" src="_images/slide-thumb-13.png"/>
-</div>
+</figure>
 </td>
 <td><p>This table illustrates the difference between them. Blue is Fluent Bit, gray is Fluentd and Y-axis is the lines processed per second (the higher, the better).</p>
 <p>Talking about LTSV, Fluent Bit can process two times more data per second, so pretty much faster than Fluentd.</p>
 <p>Even with JSON, which Fluentd has a quite optimized parser for, but still Fluent Bit outperforms Fluentd by twenty or thirty percent.</p>
 </td>
 </tr>
-<tr class="row-odd"><td><div class="figure align-default">
+<tr class="row-odd"><td><figure class="align-default">
 <img alt="_images/slide-thumb-14.png" src="_images/slide-thumb-14.png"/>
-</div>
+</figure>
 </td>
 <td><p>The summary so far is:</p>
 <ul class="simple">
@@ -373,8 +375,8 @@ Your log files do not transfer themselves to other servers, so you need to make 
 </tr>
 </tbody>
 </table></div>
-</div>
-<div class="section" id="state-of-windows-support">
+</section>
+<section id="state-of-windows-support">
 <h2>4. State of Windows Support<a class="headerlink" href="#state-of-windows-support" title="Permalink to this headline">¶</a></h2>
 <div class="table-wrapper"><table class="docutils align-default">
 <colgroup>
@@ -382,26 +384,26 @@ Your log files do not transfer themselves to other servers, so you need to make 
 <col style="width: 50%"/>
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><div class="figure align-default">
+<tr class="row-odd"><td><figure class="align-default">
 <img alt="_images/slide-thumb-15.png" src="_images/slide-thumb-15.png"/>
-</div>
+</figure>
 </td>
 <td><p>So this is the main part.</p>
 <p>First I’d like to talk a bit about the history of Fluent Bit.</p>
 <p>I’d like to start by telling that Fluent Bit was initially developed only for Linux, indeed only for embedded Linux at first.</p>
 </td>
 </tr>
-<tr class="row-even"><td><div class="figure align-default">
+<tr class="row-even"><td><figure class="align-default">
 <img alt="_images/slide-thumb-16.png" src="_images/slide-thumb-16.png"/>
-</div>
+</figure>
 </td>
 <td><p>Five years ago, in the initial commit of Fluent Bit, the readme said “Fluent Bit is a collection tool designed for Embedded Linux that collects Kernel messages and Hardware metrics”.</p>
 <p>So that was the start. It was meant to be for Embedded Linux.</p>
 </td>
 </tr>
-<tr class="row-odd"><td><div class="figure align-default">
+<tr class="row-odd"><td><figure class="align-default">
 <img alt="_images/slide-thumb-17.png" src="_images/slide-thumb-17.png"/>
-</div>
+</figure>
 </td>
 <td><p>Since then, we got full Linux support, OSX support and BSD support in 2015.
 We have also expand the supported architectures. Notably we have now full
@@ -409,18 +411,18 @@ support for ARM 64 since two years ago.</p>
 <p>And this year we’ve gotten Fluent Bit to run on Windows.</p>
 </td>
 </tr>
-<tr class="row-even"><td><div class="figure align-default">
+<tr class="row-even"><td><figure class="align-default">
 <img alt="_images/slide-thumb-18.png" src="_images/slide-thumb-18.png"/>
-</div>
+</figure>
 </td>
 <td><p>So what is the current status of Windows support? The porting project started the last December, so we have roughly six month’s work.</p>
 <p>It actually came along very smoothly. We’ve done porting most of core engine, and around third of plugins are working.</p>
 <p>It’s still quite an early stage, but the Windows port is already usable.</p>
 </td>
 </tr>
-<tr class="row-odd"><td><div class="figure align-default">
+<tr class="row-odd"><td><figure class="align-default">
 <img alt="_images/slide-thumb-19.png" src="_images/slide-thumb-19.png"/>
-</div>
+</figure>
 </td>
 <td><p>More specifically, the works we’ve done are: we made it possible to compile Fluent Bit on MSVC, and enabled to launch Fluent Bit from PowerShell.</p>
 <p>Also we’ve done porting twenty plugins to Windows, and installers are also available in two flavours: EXE and ZIP, which make installation pretty much trivial.</p>
@@ -428,8 +430,8 @@ support for ARM 64 since two years ago.</p>
 </tr>
 </tbody>
 </table></div>
-</div>
-<div class="section" id="tutorial-for-windows-users">
+</section>
+<section id="tutorial-for-windows-users">
 <h2>5. Tutorial for Windows Users<a class="headerlink" href="#tutorial-for-windows-users" title="Permalink to this headline">¶</a></h2>
 <div class="table-wrapper"><table class="docutils align-default">
 <colgroup>
@@ -437,17 +439,17 @@ support for ARM 64 since two years ago.</p>
 <col style="width: 50%"/>
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><div class="figure align-default">
+<tr class="row-odd"><td><figure class="align-default">
 <img alt="_images/slide-thumb-20.png" src="_images/slide-thumb-20.png"/>
-</div>
+</figure>
 </td>
 <td><p>So I want to explain how you can use Fluent Bit today.</p>
 <p>This is very easy indeed, so I’d like to show how to do that in a step-by-step manner.</p>
 </td>
 </tr>
-<tr class="row-even"><td><div class="figure align-default">
+<tr class="row-even"><td><figure class="align-default">
 <img alt="_images/slide-thumb-21.png" src="_images/slide-thumb-21.png"/>
-</div>
+</figure>
 </td>
 <td><p>Let me first set up some context.</p>
 <p>Suppose you have some application running on Windows and the application outputs its logs to <code class="file docutils literal notranslate"><span class="pre">C:\log\app.log</span></code>, and you also have Kafka cluster as a central message bus.</p>
@@ -455,43 +457,43 @@ support for ARM 64 since two years ago.</p>
 <p>Using Fluent Bit, we can set up such a pipeline just in three steps.</p>
 </td>
 </tr>
-<tr class="row-odd"><td><div class="figure align-default">
+<tr class="row-odd"><td><figure class="align-default">
 <img alt="_images/slide-thumb-22.png" src="_images/slide-thumb-22.png"/>
-</div>
+</figure>
 </td>
 <td><p>First, download the ZIP installer. We have EXE and ZIP installers as I said, and ZIP is easier for quick testing, so I use the one here.</p>
 <p>We build installers for each commit on AppVeyor. You can download from there if you want the latest one.</p>
 <p>Open the link on your browser and just click and save it.</p>
 </td>
 </tr>
-<tr class="row-even"><td><div class="figure align-default">
+<tr class="row-even"><td><figure class="align-default">
 <img alt="_images/slide-thumb-23.png" src="_images/slide-thumb-23.png"/>
-</div>
+</figure>
 </td>
 <td><p>Next, expand the ZIP archive.</p>
 <p>You need to just click the ZIP archive and select “Expand All” on Explorer or you can use the “Expand-Archive” commandlet on PowerShell.</p>
 <p>Both work fine, so choose the one you like.</p>
 </td>
 </tr>
-<tr class="row-odd"><td><div class="figure align-default">
+<tr class="row-odd"><td><figure class="align-default">
 <img alt="_images/slide-thumb-24.png" src="_images/slide-thumb-24.png"/>
-</div>
+</figure>
 </td>
 <td><p>Then open PowerShell and just launch Fluent Bit.</p>
 <p>The ZIP file contains fluent-bit.exe which is a stand-alone binary.  As you can see in the slide, it is included in the bin directory</p>
 </td>
 </tr>
-<tr class="row-even"><td><div class="figure align-default">
+<tr class="row-even"><td><figure class="align-default">
 <img alt="_images/slide-thumb-25.png" src="_images/slide-thumb-25.png"/>
-</div>
+</figure>
 </td>
 <td><p>As I said, the target log file is stored in <code class="file docutils literal notranslate"><span class="pre">C:\logs\app.log</span></code>.</p>
 <p>We use tail plugin as an input, and set the path accordingly.</p>
 </td>
 </tr>
-<tr class="row-odd"><td><div class="figure align-default">
+<tr class="row-odd"><td><figure class="align-default">
 <img alt="_images/slide-thumb-26.png" src="_images/slide-thumb-26.png"/>
-</div>
+</figure>
 </td>
 <td><p>And we assumed that the output is Apache Kafka.</p>
 <p>We use the Kafka output plugin, set broker’s IP address and tell Fluent Bit to send the data with “windows” topic</p>
@@ -499,9 +501,9 @@ support for ARM 64 since two years ago.</p>
 <p>Alternatively, you can create a configuration file and feed it to Fluent Bit via <cite>-c</cite> option. You can download a sample configuration file here.</p>
 </td>
 </tr>
-<tr class="row-even"><td><div class="figure align-default">
+<tr class="row-even"><td><figure class="align-default">
 <img alt="_images/slide-thumb-27.png" src="_images/slide-thumb-27.png"/>
-</div>
+</figure>
 </td>
 <td><p>The summary is:</p>
 <ul class="simple">
@@ -514,8 +516,8 @@ support for ARM 64 since two years ago.</p>
 </tr>
 </tbody>
 </table></div>
-</div>
-<div class="section" id="future-of-fluent-bit">
+</section>
+<section id="future-of-fluent-bit">
 <h2>6. Future of Fluent Bit<a class="headerlink" href="#future-of-fluent-bit" title="Permalink to this headline">¶</a></h2>
 <div class="table-wrapper"><table class="docutils align-default">
 <colgroup>
@@ -523,26 +525,26 @@ support for ARM 64 since two years ago.</p>
 <col style="width: 50%"/>
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><div class="figure align-default">
+<tr class="row-odd"><td><figure class="align-default">
 <img alt="_images/slide-thumb-28.png" src="_images/slide-thumb-28.png"/>
-</div>
+</figure>
 </td>
 <td><p>So this is status of our efforts to make Fluent Bit Windows-compatible log shipping solution.</p>
 <p>I’d like to finish my talk with sharing some ideas of future development.</p>
 </td>
 </tr>
-<tr class="row-even"><td><div class="figure align-default">
+<tr class="row-even"><td><figure class="align-default">
 <img alt="_images/slide-thumb-29.png" src="_images/slide-thumb-29.png"/>
-</div>
+</figure>
 </td>
 <td><p>First I’m planning to port the remaining thirty two plugins to Windows as much as possible.</p>
 <p>As to the plugin, we are right now working on a plugin for Windows Event Log which should be useful for Windows administrators.</p>
 <p>And I’m planning to add more documents, since it’s kinda sparse right now.</p>
 </td>
 </tr>
-<tr class="row-odd"><td><div class="figure align-default">
+<tr class="row-odd"><td><figure class="align-default">
 <img alt="_images/slide-thumb-30.png" src="_images/slide-thumb-30.png"/>
-</div>
+</figure>
 </td>
 <td><p>And we need feedbacks from users!</p>
 <p>What is your use case? Which service do you want to connect to?  If you have idea please tell us on the issue tracker on GitHub.  I’d like to hear from you.</p>
@@ -551,8 +553,8 @@ support for ARM 64 since two years ago.</p>
 </tr>
 </tbody>
 </table></div>
-</div>
-</div>
+</section>
+</section>
 
         </article>
       </div>

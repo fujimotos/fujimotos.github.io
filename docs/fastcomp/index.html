@@ -2,7 +2,8 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="author" title="About these documents" href="../about.html" /><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="TinyFastSS – An Implementatin of FastSS" href="../tinyfss/index.html" /><link rel="prev" title="Charec – Handwriting Recognition with Levenshtein Distance" href="../20191127-charec.html" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<link rel="author" title="About these documents" href="../about.html" /><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="TinyFastSS – An Implementatin of FastSS" href="../tinyfss/index.html" /><link rel="prev" title="Charec – Handwriting Recognition with Levenshtein Distance" href="../20191127-charec.html" />
 
     <link rel="shortcut icon" href="../_static/favicon.ico"/><meta name="generator" content="sphinx-4.4.0, furo 2022.01.02"/>
         <title>mbleven – A fast algorithm for bounded edit distance - Notes on Levenshtein Distance</title>
@@ -172,6 +173,7 @@
 <p class="caption" role="heading"><span class="caption-text">Misc</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../about.html">Fujimoto Seiji</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../citation.html">Citations</a></li>
 </ul>
 
 </div>
@@ -198,7 +200,7 @@
           </label>
         </div>
         <article role="main">
-          <div class="section" id="mbleven-a-fast-algorithm-for-bounded-edit-distance">
+          <section id="mbleven-a-fast-algorithm-for-bounded-edit-distance">
 <h1>mbleven – A fast algorithm for bounded edit distance<a class="headerlink" href="#mbleven-a-fast-algorithm-for-bounded-edit-distance" title="Permalink to this headline">¶</a></h1>
 <dl class="field-list simple">
 <dt class="field-odd">Author</dt>
@@ -214,24 +216,24 @@
 <p><em class="dfn">mbleven</em> is a fast algorithm to compute k-bounded Levenshtein
 distance. In general, it’s one of the fastest algorithm for cases
 where the bound parameter is small (<span class="math notranslate nohighlight">\(k &lt; 3\)</span>).</p>
-<div class="section" id="how-fast-is-it">
+<section id="how-fast-is-it">
 <h2>1. How fast is it?<a class="headerlink" href="#how-fast-is-it" title="Permalink to this headline">¶</a></h2>
 <p>To illustrate the performance characteristic, I conducted a benchmark
 test that compares mbleven and <a class="reference internal" href="../wagner-fischer/index.html"><span class="doc">the Wagner-Fischer algorithm</span></a>.</p>
 <p>The measurement was done by count the time each algorithm takes to
 process 4 million binary strings. Here is the graph that shows the
 result (on Intel Core i3-4010U with GCC 6.3.0):</p>
-<div class="figure align-default">
+<figure class="align-default">
 <a class="reference internal image-reference" href="../_images/benchmark.png"><img alt="../_images/benchmark.png" src="../_images/benchmark.png" style="width: 600px;"/></a>
-</div>
+</figure>
 <p>The benchmark program is available from <a class="reference download internal" download="" href="../_downloads/944aa889abf6a56f83049cb8436af2f3/mbleven-benchmark.c"><code class="xref download docutils literal notranslate"><span class="pre">mbleven-benchmark.c</span></code></a>.
 To run this program:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cc -O2 -o mbleven-benchmark mbleven-benchmark.c
 $ ./mbleven-benchmark
 </pre></div>
 </div>
-</div>
-<div class="section" id="implementations">
+</section>
+<section id="implementations">
 <h2>2. Implementations<a class="headerlink" href="#implementations" title="Permalink to this headline">¶</a></h2>
 <p>There are several implementations available.</p>
 <ul class="simple">
@@ -239,8 +241,8 @@ $ ./mbleven-benchmark
 <li><p><a class="reference external" href="https://github.com/doukremt/distance">distance</a> contains a C implementation (See <code class="samp docutils literal notranslate"><span class="pre">fast_comp()</span></code> function).</p></li>
 <li><p><a class="reference external" href="https://github.com/fujimotos/polyleven">polyleven</a> contains another C implementation.</p></li>
 </ul>
-</div>
-<div class="section" id="how-it-works">
+</section>
+<section id="how-it-works">
 <h2>3. How it works<a class="headerlink" href="#how-it-works" title="Permalink to this headline">¶</a></h2>
 <p>mbleven is a <em>hypothesis-based</em> algorithm, which means that it solves
 the edit distance problem by testing a collection of hypotheses.</p>
@@ -257,7 +259,7 @@ of them holds true.</p>
 <p>As explained later, each hypothesis can be verified in <span class="math notranslate nohighlight">\(O(n)\)</span> time
 using <span class="math notranslate nohighlight">\(O(1)\)</span> space, so it can run quite faster than the common
 algorithms that require <span class="math notranslate nohighlight">\(O(n^2)\)</span> time.</p>
-<div class="section" id="efficient-pruning">
+<section id="efficient-pruning">
 <h3>3.1. Efficient Pruning<a class="headerlink" href="#efficient-pruning" title="Permalink to this headline">¶</a></h3>
 <p>One important aspect of mbleven is very efficient pruning of search
 space. In particular, we can reject most of hypotheses just by
@@ -272,8 +274,8 @@ can’t convert one into another.</p>
 T = ‘fo’ with <span class="math notranslate nohighlight">\(k=2\)</span>, we only need to check “one deletion + one
 substitution”. If S = ‘foobar’ and T = ‘bar’ with <span class="math notranslate nohighlight">\(k=3\)</span>, we just need
 to test “three deletions”.</p>
-</div>
-<div class="section" id="verification-algorithm">
+</section>
+<section id="verification-algorithm">
 <h3>3.2. Verification Algorithm<a class="headerlink" href="#verification-algorithm" title="Permalink to this headline">¶</a></h3>
 <p>As mentioned above, each hypothesis can be verified in <span class="math notranslate nohighlight">\(O(n)\)</span> time.
 The following code shows how the verification can be done:</p>
@@ -307,9 +309,9 @@ than <span class="math notranslate nohighlight">\(k\)</span>, it means that the 
 <p>As you can see, each iteration of the while loop increments i or j,
 so the main loop will break after at most <span class="math notranslate nohighlight">\(n + m\)</span> steps. Thus, this
 function runs in linear time to the length of the input strings.</p>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
         </article>
       </div>

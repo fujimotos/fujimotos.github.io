@@ -46,4 +46,5 @@ I write about Levenshen distance and other techinical stuffs.
    :hidden:
 
    about
+   citation
 

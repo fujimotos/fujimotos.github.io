@@ -2,7 +2,8 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="author" title="About these documents" href="about.html" /><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Polyleven – Fast Pythonic Levenshtein Library" href="20181215-polyleven.html" /><link rel="prev" title="Can We Optimize the Wagner-Fischer Algorithm?" href="wagner-fischer/index.html" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<link rel="author" title="About these documents" href="about.html" /><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Polyleven – Fast Pythonic Levenshtein Library" href="20181215-polyleven.html" /><link rel="prev" title="Can We Optimize the Wagner-Fischer Algorithm?" href="wagner-fischer/index.html" />
 
     <link rel="shortcut icon" href="_static/favicon.ico"/><meta name="generator" content="sphinx-4.4.0, furo 2022.01.02"/>
         <title>Wagner-Fischer vs Myers’ Algorithm - Notes on Levenshtein Distance</title>
@@ -172,6 +173,7 @@
 <p class="caption" role="heading"><span class="caption-text">Misc</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="about.html">Fujimoto Seiji</a></li>
+<li class="toctree-l1"><a class="reference internal" href="citation.html">Citations</a></li>
 </ul>
 
 </div>
@@ -198,7 +200,7 @@
           </label>
         </div>
         <article role="main">
-          <div class="section" id="wagner-fischer-vs-myers-algorithm">
+          <section id="wagner-fischer-vs-myers-algorithm">
 <h1>Wagner-Fischer vs Myers’ Algorithm<a class="headerlink" href="#wagner-fischer-vs-myers-algorithm" title="Permalink to this headline">¶</a></h1>
 <dl class="field-list simple">
 <dt class="field-odd">Author</dt>
@@ -211,24 +213,26 @@
 <dd class="field-odd"><p>This document has been placed in the public domain.</p>
 </dd>
 </dl>
-<div class="section" id="abstract">
+<section id="abstract">
 <h2>Abstract<a class="headerlink" href="#abstract" title="Permalink to this headline">¶</a></h2>
 <p>This article compares the two most common algorithms for computing
 Levenshtein Distance.</p>
 <ul class="simple">
-<li><p>Wagner-Fischer Algorithm (1974) <a class="reference internal" href="wagner-fischer/index.html#wagner1974" id="id1"><span>[Wagner1974]</span></a></p></li>
-<li><p>Myers’ Bit-parallel Algorithm (1999) <a class="reference internal" href="#myers1999" id="id2"><span>[Myers1999]</span></a></p></li>
+<li><p>Wagner-Fischer Algorithm (1974) <a class="reference internal" href="citation.html#wagner1974" id="id1"><span>[Wagner1974]</span></a></p></li>
+<li><p>Myers’ Bit-parallel Algorithm (1999) <a class="reference internal" href="citation.html#myers1999" id="id2"><span>[Myers1999]</span></a></p></li>
 </ul>
 <p>The key result is that Myers’ algorithm almost always outperforms
 the Wagner-Fischer algorithm (the exception is very short inputs
 of <code class="docutils literal notranslate"><span class="pre">length</span> <span class="pre">&lt;</span> <span class="pre">6</span></code>).  The performance difference becomes striking
 when input strings become longer.</p>
-<div class="figure align-default" id="id4">
+<figure class="align-default" id="id4">
 <a class="reference internal image-reference" href="_images/benchmark.svg"><img alt="_images/benchmark.svg" src="_images/benchmark.svg" width="600"/></a>
-<p class="caption"><span class="caption-text">Comparison of Wagner-Fischer vs Myers Algorithm</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
-</div>
-</div>
-<div class="section" id="introduction">
+<figcaption>
+<p><span class="caption-text">Comparison of Wagner-Fischer vs Myers Algorithm</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="introduction">
 <h2>1. Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
 <p>Algorithm selection is the corner-stone of problem solving. It can
 result in a major difference in performance depending on which
@@ -240,8 +244,8 @@ implementation against the same data set.</p>
 <p>The test data is random hex strings ranging from 2 characters to
 64 characters. The computation time was measured by processing 1
 million pairs of strings.</p>
-</div>
-<div class="section" id="result">
+</section>
+<section id="result">
 <h2>2. Result<a class="headerlink" href="#result" title="Permalink to this headline">¶</a></h2>
 <p>The figure 1 above shows the raw result data. The figure 2 below
 shows the same result using a log scale, to better illustrate the
@@ -249,10 +253,12 @@ performance difference for shorter strings.</p>
 <p>The “break-even” point seems to be six characters. Longer than
 that, Myers’s algorithm works better than the Wagner-Fischer
 algorithm. Shorter than that, the converse holds true.</p>
-<div class="figure align-default" id="id5">
+<figure class="align-default" id="id5">
 <a class="reference internal image-reference" href="_images/benchmark-log.svg"><img alt="_images/benchmark-log.svg" src="_images/benchmark-log.svg" width="600"/></a>
-<p class="caption"><span class="caption-text">Comparison of Wagner-Fischer vs Myers Algorithm (logscale)</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
-</div>
+<figcaption>
+<p><span class="caption-text">Comparison of Wagner-Fischer vs Myers Algorithm (logscale)</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
 <p>The numbers are retrieved on Intel Xeon(R) E5-2660 (2.60Ghz) with
 GCC 8.3.0.</p>
 <p>You can download the benchmark script from <a class="reference download internal" download="" href="_downloads/5b6d23d8b798b7137ef483a38895eca2/benchmark.c"><code class="xref download docutils literal notranslate"><span class="pre">benchmark.c</span></code></a>
@@ -261,8 +267,8 @@ and run it as follows:</p>
 $ ./benchmark
 </pre></div>
 </div>
-</div>
-<div class="section" id="implementation-notes">
+</section>
+<section id="implementation-notes">
 <h2>3. Implementation Notes<a class="headerlink" href="#implementation-notes" title="Permalink to this headline">¶</a></h2>
 <p>To the Wagner-Fischer algorithm, I applied Ukkonen’s optimization
 to improve the performance. My article <a class="reference internal" href="wagner-fischer/index.html"><span class="doc">Can We Optimize the Wagner-Fischer Algorithm?</span></a>
@@ -270,7 +276,7 @@ contains a detailed explanation of this technique. To my knowledge,
 this is the best generic implementation of this algorithm.</p>
 <p>To Myers’ bit-parallel algorithm, I applied an unpublished
 optimization technique to speed up the computation. In particular,
-the original paper <a class="reference internal" href="#myers1999" id="id3"><span>[Myers1999]</span></a> required the computation of a lookup
+the original paper <a class="reference internal" href="citation.html#myers1999" id="id3"><span>[Myers1999]</span></a> required the computation of a lookup
 table for every alphabet (e.g. 52 letters for ASCII alphabets, or
 10k+ letters for Unicode). This requirement is often impractical for
 real-world applications.</p>
@@ -278,25 +284,8 @@ real-world applications.</p>
 pre-computed in <span class="math notranslate nohighlight">\(O(n)\)</span> time, rather than <span class="math notranslate nohighlight">\(O(Σ)\)</span>, where n is the length
 of strings and <span class="math notranslate nohighlight">\(Σ\)</span> is the total number of alphabets. I found this
 technique adds a good speedup to the algorithm (See <a class="reference external" href="https://github.com/fujimotos/polyleven/commit/82a08e04">82a08e04</a> for details).</p>
-</div>
-<div class="section" id="references">
-<h2>4. References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
-<dl class="citation">
-<dt class="label" id="wagner1974"><span class="brackets"><a class="fn-backref" href="#id1">Wagner1974</a></span></dt>
-<dd><p>Wagner, Robert A., and Michael J. Fischer. “The string-to-
-string correction problem.” Journal of the ACM 21.1 (1974):
-168-173.
-<a class="reference external" href="https://dl.acm.org/doi/pdf/10.1145/321796.321811">https://dl.acm.org/doi/pdf/10.1145/321796.321811</a></p>
-</dd>
-<dt class="label" id="myers1999"><span class="brackets">Myers1999</span><span class="fn-backref">(<a href="#id2">1</a>,<a href="#id3">2</a>)</span></dt>
-<dd><p>Myers, Gene. “A fast bit-vector algorithm for approximate
-string matching based on dynamic programming.” Journal of
-ACM (JACM) 46.3 (1999): 395-415.
-<a class="reference external" href="https://core.ac.uk/download/pdf/189740935.pdf">https://core.ac.uk/download/pdf/189740935.pdf</a></p>
-</dd>
-</dl>
-</div>
-</div>
+</section>
+</section>
 
         </article>
       </div>
@@ -354,7 +343,6 @@ ACM (JACM) 46.3 (1999): 395-415.
 <li><a class="reference internal" href="#introduction">1. Introduction</a></li>
 <li><a class="reference internal" href="#result">2. Result</a></li>
 <li><a class="reference internal" href="#implementation-notes">3. Implementation Notes</a></li>
-<li><a class="reference internal" href="#references">4. References</a></li>
 </ul>
 </li>
 </ul>

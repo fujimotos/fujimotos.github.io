@@ -2,7 +2,8 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="author" title="About these documents" href="about.html" /><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Charec – Handwriting Recognition with Levenshtein Distance" href="20191127-charec.html" /><link rel="prev" title="Wagner-Fischer vs Myers’ Algorithm" href="20200815-Comparison.html" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<link rel="author" title="About these documents" href="about.html" /><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Charec – Handwriting Recognition with Levenshtein Distance" href="20191127-charec.html" /><link rel="prev" title="Wagner-Fischer vs Myers’ Algorithm" href="20200815-Comparison.html" />
 
     <link rel="shortcut icon" href="_static/favicon.ico"/><meta name="generator" content="sphinx-4.4.0, furo 2022.01.02"/>
         <title>Polyleven – Fast Pythonic Levenshtein Library - Notes on Levenshtein Distance</title>
@@ -172,6 +173,7 @@
 <p class="caption" role="heading"><span class="caption-text">Misc</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="about.html">Fujimoto Seiji</a></li>
+<li class="toctree-l1"><a class="reference internal" href="citation.html">Citations</a></li>
 </ul>
 
 </div>
@@ -198,7 +200,7 @@
           </label>
         </div>
         <article role="main">
-          <div class="section" id="polyleven-fast-pythonic-levenshtein-library">
+          <section id="polyleven-fast-pythonic-levenshtein-library">
 <h1>Polyleven – Fast Pythonic Levenshtein Library<a class="headerlink" href="#polyleven-fast-pythonic-levenshtein-library" title="Permalink to this headline">¶</a></h1>
 <dl class="field-list simple">
 <dt class="field-odd">Author</dt>
@@ -214,23 +216,23 @@
 <dd class="field-even"><p>This document has been placed in the public domain.</p>
 </dd>
 </dl>
-<div class="section" id="introduction">
+<section id="introduction">
 <h2>1. Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
 <p><em class="dfn">Polyleven</em> is a Levenshtein distance library for Python, with
 a special attention to efficiency.</p>
 <p>The basic idea behind this library is that we can gain the best of
 different algorithms by switching between them depending on the
 kinds of input strings.</p>
-</div>
-<div class="section" id="how-to-install">
+</section>
+<section id="how-to-install">
 <h2>2. How to Install<a class="headerlink" href="#how-to-install" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="pypi">
+<section id="pypi">
 <h3>2.1. PyPI<a class="headerlink" href="#pypi" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pip install polyleven
 </pre></div>
 </div>
-</div>
-<div class="section" id="source-distribution">
+</section>
+<section id="source-distribution">
 <h3>2.2. Source Distribution<a class="headerlink" href="#source-distribution" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p><a class="reference external" href="https://github.com/fujimotos/polyleven/archive/refs/tags/0.7.zip">polyleven-0.7.zip</a></p>
@@ -250,17 +252,17 @@ kinds of input strings.</p>
 </ul>
 </li>
 </ul>
-</div>
-<div class="section" id="git-repository">
+</section>
+<section id="git-repository">
 <h3>2.3. GIT Repository<a class="headerlink" href="#git-repository" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/fujimotos/polyleven
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="usage">
+</section>
+</section>
+<section id="usage">
 <h2>3. Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="basic-usage">
+<section id="basic-usage">
 <h3>3.1. Basic Usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h3>
 <p>Polyleven provides a single interface function <code class="docutils literal notranslate"><span class="pre">levenshtein()</span></code>. You
 can use this function to measure the similarity of two strings.</p>
@@ -269,8 +271,8 @@ can use this function to measure the similarity of two strings.</p>
 <span class="go">3</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="advanced-usage">
+</section>
+<section id="advanced-usage">
 <h3>3.2. Advanced Usage<a class="headerlink" href="#advanced-usage" title="Permalink to this headline">¶</a></h3>
 <p>If you only care about distances under a certain threshold, you can
 pass the max threshold to the third argument.</p>
@@ -282,11 +284,11 @@ pass the max threshold to the third argument.</p>
 </div>
 <p>In general, you can gain a noticeable speed boost with threshold
 <span class="math notranslate nohighlight">\(k &lt; 3\)</span>.</p>
-</div>
-</div>
-<div class="section" id="benchmark">
-<span id="id2"></span><h2>4. Benchmark<a class="headerlink" href="#benchmark" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="english-words">
+</section>
+</section>
+<section id="benchmark">
+<h2>4. Benchmark<a class="headerlink" href="#benchmark" title="Permalink to this headline">¶</a></h2>
+<section id="english-words">
 <h3>4.1  English Words<a class="headerlink" href="#english-words" title="Permalink to this headline">¶</a></h3>
 <p>To compare Polyleven with other Pythonic edit distance libraries,
 a million word pairs was generated from <a class="reference external" href="http://wordlist.aspell.net/">SCOWL</a>.</p>
@@ -340,12 +342,12 @@ we need to pre-compute a table of bit patterns for each character.
 For short inputs like English words (the average length is just 7-8
 characters), the cost of pre-computation dwarfs the benefit of
 parallelism.</p>
-</div>
-<div class="section" id="longer-inputs">
+</section>
+<section id="longer-inputs">
 <h3>4.2. Longer Inputs<a class="headerlink" href="#longer-inputs" title="Permalink to this headline">¶</a></h3>
 <p>To evaluate the efficiency for longer inputs, I careted 5000 pairs
 of random strings of size 16, 32, 64, 128, 256, 512 and 1024.</p>
-<p>Each library was measured how fast it can process these entries. <a class="footnote-reference brackets" href="#fn1" id="id3">1</a></p>
+<p>Each library was measured how fast it can process these entries. <a class="footnote-reference brackets" href="#fn1" id="id2">1</a></p>
 <div class="table-wrapper"><table class="docutils align-default">
 <colgroup>
 <col style="width: 25%"/>
@@ -430,8 +432,8 @@ longer inputs. Other libraries have a steep cost curve as the string
 length increases.</p>
 <p>The good thing about polyleven is that it can process both short
 and long inputs efficiently.</p>
-</div>
-<div class="section" id="list-of-libraries">
+</section>
+<section id="list-of-libraries">
 <h3>4.3. List of Libraries<a class="headerlink" href="#list-of-libraries" title="Permalink to this headline">¶</a></h3>
 <div class="table-wrapper"><table class="docutils align-default">
 <colgroup>
@@ -473,14 +475,14 @@ and long inputs efficiently.</p>
 </tbody>
 </table></div>
 <dl class="footnote brackets">
-<dt class="label" id="fn1"><span class="brackets"><a class="fn-backref" href="#id3">1</a></span></dt>
+<dt class="label" id="fn1"><span class="brackets"><a class="fn-backref" href="#id2">1</a></span></dt>
 <dd><p>Measured using Python 3.5.3 on Debian Jessie with Intel Core
 i3-4010U (1.70GHz)</p>
 </dd>
 </dl>
-</div>
-</div>
-<div class="section" id="implementation-note">
+</section>
+</section>
+<section id="implementation-note">
 <h2>5. Implementation Note<a class="headerlink" href="#implementation-note" title="Permalink to this headline">¶</a></h2>
 <p>As of version 0.5, polyleven uses the following heuristics to
 choose an algorithm:</p>
@@ -507,8 +509,8 @@ choose an algorithm:</p>
 <p>Before 0.4, polyleven used the Wagner-Fischer algorithm for shorter
 strings, but, alas, it turned out that reasonably optimized Myers’
 algorithm almost always performs better.</p>
-</div>
-</div>
+</section>
+</section>
 
         </article>
       </div>

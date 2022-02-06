@@ -79,9 +79,6 @@ pass the max threshold to the third argument.
 In general, you can gain a noticeable speed boost with threshold
 :math:`k < 3`.
 
-
-.. _benchmark:
-
 4. Benchmark
 ------------
 

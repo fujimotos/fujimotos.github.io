@@ -98,15 +98,3 @@ to a Levenshtein distance function.
 
 For encoding, I used the Schimke-Vielhauer-Dittman technique [Schimke2004]_
 and it turned out to work surprisingly well.
-
-4. References
--------------
-
-.. [Schimke2004] 
-    Schimke, Sascha, Claus Vielhauer, and Jana Dittmann. "Using
-    adapted levenshtein distance for on-line signature
-    authentication." Proceedings of the 17th International
-    Conference on Pattern Recognition, 2004. ICPR 2004.. Vol. 2.
-    IEEE, 2004.
-
-    http://zeus.fh-brandenburg.de/~vielhaue/jabreflib/[ScVD2004].pdf

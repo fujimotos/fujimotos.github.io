@@ -158,7 +158,7 @@ An interesting aspect of this technique is that it often improves
 not only the memory usage, but also the computation time as well
 (only a few percent improvement at best, though).
 
-See the benchmark result in :ref:`benchmark` for more details.
+See the benchmark result below for more details.
 
 3. How to Reduce Computation Time
 ---------------------------------
@@ -327,8 +327,6 @@ edit distance between "abcd" and "pqrs" is computed correctly.
 If you are looking for an example implementation, please refer to
 ``wagner_fischer_O2()`` contained in the benchmark script.
 
-.. _benchmark:
-
 4. Benchmark
 ------------
 
@@ -363,17 +361,3 @@ The following graph shows the result graphically.
    :width: 500
    
    Comparison of the three implementaions of the Wagner-Fischer algorithm.
-
-5. References
--------------
-
-.. [Wagner1974] Wagner, Robert A., and Michael J. Fischer. "The string-to-
-    string correction problem." Journal of the ACM 21.1 (1974):
-    168-173.
-
-    https://dl.acm.org/doi/pdf/10.1145/321796.321811
-
-.. [Ukkonen1985] Ukkonen, Esko. "Algorithms for approximate string matching."
-   Information and control 64.1-3 (1985): 100-118.
-
-   https://core.ac.uk/download/pdf/81135723.pdf

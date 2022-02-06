@@ -89,16 +89,3 @@ of strings and :math:`Σ` is the total number of alphabets. I found this
 technique adds a good speedup to the algorithm (See `82a08e04`_ for details).
 
 .. _82a08e04: https://github.com/fujimotos/polyleven/commit/82a08e04
-
-4. References
--------------
-
-.. [Wagner1974] Wagner, Robert A., and Michael J. Fischer. "The string-to-
-    string correction problem." Journal of the ACM 21.1 (1974):
-    168-173.
-    https://dl.acm.org/doi/pdf/10.1145/321796.321811
-
-.. [Myers1999] Myers, Gene. "A fast bit-vector algorithm for approximate
-    string matching based on dynamic programming." Journal of
-    ACM (JACM) 46.3 (1999): 395-415.
-    https://core.ac.uk/download/pdf/189740935.pdf

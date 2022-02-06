@@ -103,11 +103,3 @@ conveyor           1.99              502.5
 =========== =============== ===================
 
 It took ~5ms on average to perform a query.
-
-5. References
--------------
-
-.. [Bocek2007]
-   Bocek, Thomas, et al. Fast similarity search in large dictionaries. 2007.
-
-   https://fastss.csg.uzh.ch/ifi-2007.02.pdf
