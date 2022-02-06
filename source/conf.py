@@ -47,7 +47,7 @@ html_theme = 'furo'
 html_title = 'Notes on Levenshtein Distance'
 html_css_files = ['custom.css']
 html_favicon = '_static/favicon.ico'
-html_baseurl = 'https://www.ceptord.net/'
+html_baseurl = 'https://ceptord.net/'
 
 html_theme_options = {
   "sidebar_hide_name": True,
