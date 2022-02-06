@@ -47,11 +47,12 @@ html_theme = 'furo'
 html_title = 'Notes on Levenshtein Distance'
 html_css_files = ['custom.css']
 html_favicon = '_static/favicon.ico'
-html_logo    = '_static/logo.png'
 html_baseurl = 'https://www.ceptord.net/'
 
 html_theme_options = {
-  "sidebar_hide_name": True
+  "sidebar_hide_name": True,
+  "light_logo": "logo.png",
+  "dark_logo": "logo-dark.png",
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
