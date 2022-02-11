@@ -96,9 +96,9 @@ The following code shows how the verification can be done:
         n = len(t)
         k = len(model)
         i, j, c = 0, 0, 0
-        while (i &lt; m) and (j &lt; n):
+        while (i < m) and (j < n):
             if s[i] != t[j]:
-                if k &lt;= c:
+                if k <= c:
                     return c + 1
                 if model[c] == 'd':  # deletion
                     i += 1
