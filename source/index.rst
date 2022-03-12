@@ -1,50 +1,62 @@
-=============================
-Notes on Levenshtein Distance
-=============================
+===========================
+Polyleven Research Archives
+===========================
 
-**Last update:** |today|
+Polyleven is a project being developed since 2017 to provide fast
+Levenshtein computation to Python.
 
-**Useful links:**
-`GitHub <https://github.com/fujimotos>`_ |
-:any:`About Me <about>`
+.. list-table::
+   :widths: 5 10 30
 
-This is the personal website of :any:`Fujimoto Seiji <about>`.
-I write about Levenshen distance and other techinical stuffs.
+   * - latest
+     - 
+     - https://github.com/fujimotos/polyleven
+   * - PyPI
+     - 
+     - https://pypi.org/project/polyleven/
+   * - v0.7
+     - 2021-02-23
+     - `[zipfile] <https://github.com/fujimotos/polyleven/archive/refs/tags/0.7.zip>`__
+       `[tarball] <https://github.com/fujimotos/polyleven/archive/refs/tags/0.7.tar.gz>`__
+   * - v0.6
+     - 2021-01-11
+     - `[zipfile] <https://github.com/fujimotos/polyleven/archive/refs/tags/0.6.zip>`__
+       `[tarball] <https://github.com/fujimotos/polyleven/archive/refs/tags/0.6.tar.gz>`__
+   * - v0.5
+     - 2020-02-14
+     - `[zipfile] <https://github.com/fujimotos/polyleven/archive/refs/tags/0.5.zip>`__
+       `[tarball] <https://github.com/fujimotos/polyleven/archive/refs/tags/0.5.tar.gz>`__
+   * - v0.4
+     - 2019-10-13
+     - `[zipfile] <https://github.com/fujimotos/polyleven/archive/refs/tags/0.4.zip>`__
+       `[tarball] <https://github.com/fujimotos/polyleven/archive/refs/tags/0.4.tar.gz>`__
 
-.. rubric:: Most Accessed Articles
+About this website
+==================
 
-:any:`wagner-fischer/index`
-    An expository note to describe how to implement the Wagner-Fischer
-    algorithm -- a general algorithm to compute edit distance -- with a
-    special attention to algorithmic efficiency.
+This website hosts a collection of technical surveys done during the
+development of polyleven.
 
-:any:`20191127-charec`
-    A toy handwriting recognition program using Levenshtein distance.
-    I wrote this program mainly to show that Levenshtein distance is applicable to
-    a wide range of objects (i.e. not just for strings).
+Tabel of Contents
+-----------------
 
 .. toctree::
-   :caption: Research
    :maxdepth: 1
-   :hidden:
 
-   wagner-fischer/index
-   20200815-Comparison
+   contact.rst
+   faq.rst
+   research.rst
+   citation.rst
 
-.. toctree::
-   :caption: Software
-   :maxdepth: 1
-   :hidden:
+Legal Notice and Copyright
+==========================
 
-   20181215-polyleven
-   20191127-charec
-   fastcomp/index
-   tinyfss/index
+Except where otherwise stated, contents on ceptord.net is written by
+Fujimoto Seiji <fujimoto@ceptord.net> and placed under the
+`public domain`_.
 
-.. toctree::
-   :caption: Misc
-   :hidden:
+If your legistration doesn't accept public domain, I hereby makes
+contents on ceptord.net available under `MIT License`_.
 
-   about
-   citation
-
+.. _public domain: https://cr.yp.to/publicdomain.html
+.. _MIT License: https://spdx.org/licenses/MIT.html
