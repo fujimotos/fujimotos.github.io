@@ -11,6 +11,10 @@ Can We Optimize the Wagner-Fischer Algorithm?
 :Updated: 2020-04-26
 :Copyright: This document has been placed in the public domain.
 
+.. contents:: Table of Contents
+   :local:
+   :backlinks: none
+
 1. Introduction
 ---------------
 

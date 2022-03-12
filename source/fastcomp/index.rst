@@ -6,6 +6,10 @@ mbleven -- A fast algorithm for bounded edit distance
 :Published: 2012-03-01 
 :Copyright: This document has been placed in the public domain.
 
+.. contents:: Table of Contents
+   :local:
+   :backlinks: none
+
 :dfn:`mbleven` is a fast algorithm to compute k-bounded Levenshtein
 distance. In general, it's one of the fastest algorithm for cases
 where the bound parameter is small (:math:`k < 3`).
