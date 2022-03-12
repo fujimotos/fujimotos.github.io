@@ -17,7 +17,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'ceptord.net'
+project = 'Polyleven'
 copyright = '2011-2022, Fujimoto Seiji'
 author = 'Fujimoto Seiji'
 
@@ -43,17 +43,15 @@ exclude_patterns = []
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'furo'
-html_title = 'Notes on Levenshtein Distance'
+root_doc = 'index'
+html_theme = 'alabaster'
+html_title = 'Polyleven'
 html_css_files = ['custom.css']
-html_favicon = '_static/favicon.ico'
+html_favicon = '_static/favicon.png'
 html_baseurl = 'https://ceptord.net/'
+html_copy_source = False
 
-html_theme_options = {
-  "sidebar_hide_name": True,
-  "light_logo": "logo.png",
-  "dark_logo": "logo-dark.png",
-}
+html_theme_options = {}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
