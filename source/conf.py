@@ -51,7 +51,12 @@ html_favicon = '_static/favicon.png'
 html_baseurl = 'https://ceptord.net/'
 html_copy_source = False
 
-html_theme_options = {}
+html_theme_options = {
+  'description': 'Fast Levevenshtein Distance Library for Python 3',
+  'github_user': 'fujimotos',
+  'github_repo': 'polyleven',
+  'github_type': 'star',
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
