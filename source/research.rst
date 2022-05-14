@@ -25,6 +25,11 @@ List of articles
     distance. In general, it's one of the fastest algorithm for cases
     where the bound parameter is small (:math:`k < 3`).
 
+:any:`20220515-dna100m`
+
+    This expository note explains how to query a 100 million DNA
+    dataset in a couple seconds.
+
 .. toctree::
    :caption: Table of Contents
    :maxdepth: 1
@@ -32,5 +37,7 @@ List of articles
 
    wagner-fischer/index.rst
    20200815-Comparison.rst
+   20220515-dna100m.rst
    fastcomp/index.rst
    tinyfss/index.rst
+   
