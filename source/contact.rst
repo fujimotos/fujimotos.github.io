@@ -59,5 +59,6 @@ Past Talks
    * - 2021-11-04
      - CloudNative Days Tokyo
      - :download:`Fluentd/Fluent Bitで実現する楽なKubernetesのログ運用 </_static/20211104-fluentd.pdf>`
-
-
+   * - 2022-09-09
+     - RubyKaigi 2022
+     - `How Fast Really is Ruby 3.x? <https://github.com/fujimotos/RubyKaigi2022>`_
