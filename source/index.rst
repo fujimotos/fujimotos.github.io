@@ -1,6 +1,6 @@
-===========================
-Polyleven Research Archives
-===========================
+=========
+Polyleven
+=========
 
 Polyleven is a fast Levenshtein library for Python 3.x.
 
