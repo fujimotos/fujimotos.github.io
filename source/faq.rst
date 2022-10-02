@@ -6,9 +6,6 @@ FAQ
    :local:
    :backlinks: none
 
-General Questions
-=================
-
 What is Levenshtein Distance?
 -----------------------------
 
@@ -65,11 +62,3 @@ your use case.
 
 Note that Myers algorithm cannot be applied to variants of 
 Leveshtein distance (e.g. edit costs are not fixed to 1).
-
-Polyleven Questions
-===================
-
-mbleven Questions
-=================
-
-
