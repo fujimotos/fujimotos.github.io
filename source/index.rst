@@ -43,7 +43,7 @@ Tabel of Contents
 .. toctree::
    :maxdepth: 1
 
-   contact.rst
+   quickstart.rst
    faq.rst
    research.rst
    citation.rst
