@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
     <title>Wagner-Fischer vs Myers’ Algorithm &#8212; Polyleven</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
@@ -13,13 +13,15 @@
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="canonical" href="https://ceptord.net/20200815-Comparison.html" />
     <link rel="shortcut icon" href="_static/favicon.png"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="mbleven – A fast algorithm for bounded edit distance" href="fastcomp/index.html" />
+    <link rel="next" title="Fast fuzzy search on 100 million DNA dataset" href="20220515-dna100m.html" />
     <link rel="prev" title="Can We Optimize the Wagner-Fischer Algorithm?" href="wagner-fischer/index.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -38,22 +40,22 @@
           <div class="body" role="main">
             
   <section id="wagner-fischer-vs-myers-algorithm">
-<h1>Wagner-Fischer vs Myers’ Algorithm<a class="headerlink" href="#wagner-fischer-vs-myers-algorithm" title="Permalink to this headline">¶</a></h1>
+<h1>Wagner-Fischer vs Myers’ Algorithm<a class="headerlink" href="#wagner-fischer-vs-myers-algorithm" title="Permalink to this heading">¶</a></h1>
 <dl class="field-list simple">
-<dt class="field-odd">Author</dt>
+<dt class="field-odd">Author<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Fujimoto Seiji</p>
 </dd>
-<dt class="field-even">Published</dt>
+<dt class="field-even">Published<span class="colon">:</span></dt>
 <dd class="field-even"><p>2020-08-15</p>
 </dd>
-<dt class="field-odd">Updated</dt>
+<dt class="field-odd">Updated<span class="colon">:</span></dt>
 <dd class="field-odd"><p>2022-03-12</p>
 </dd>
-<dt class="field-even">Copyright</dt>
+<dt class="field-even">Copyright<span class="colon">:</span></dt>
 <dd class="field-even"><p>This document has been placed in the public domain.</p>
 </dd>
 </dl>
-<div class="contents local topic" id="contents">
+<nav class="contents local" id="contents">
 <ul class="simple">
 <li><p><a class="reference internal" href="#introduction" id="id5">1. Introduction</a></p></li>
 <li><p><a class="reference internal" href="#methods" id="id6">2. Methods</a></p>
@@ -64,9 +66,9 @@
 </li>
 <li><p><a class="reference internal" href="#result" id="id9">3. Result</a></p></li>
 </ul>
-</div>
+</nav>
 <section id="introduction">
-<h2>1. Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<h2>1. Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">¶</a></h2>
 <p>This article compares the two most common Levenshtein distance
 algorithms.</p>
 <ul class="simple">
@@ -80,9 +82,9 @@ is often limited.</p>
 algorithms.</p>
 </section>
 <section id="methods">
-<h2>2. Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
+<h2>2. Methods<a class="headerlink" href="#methods" title="Permalink to this heading">¶</a></h2>
 <section id="implementation">
-<h3>2.1. Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h3>
+<h3>2.1. Implementation<a class="headerlink" href="#implementation" title="Permalink to this heading">¶</a></h3>
 <p>I created a C implementation of two algorithms. Some notes on
 the implementation:</p>
 <ul class="simple">
@@ -98,7 +100,7 @@ length of input strings). See <a class="reference external" href="https://github
 <p>You can download the implementation from <a class="reference download internal" download="" href="_downloads/5b6d23d8b798b7137ef483a38895eca2/benchmark.c"><code class="xref download docutils literal notranslate"><span class="pre">benchmark.c</span></code></a>.</p>
 </section>
 <section id="test-data">
-<h3>2.2. Test Data<a class="headerlink" href="#test-data" title="Permalink to this headline">¶</a></h3>
+<h3>2.2. Test Data<a class="headerlink" href="#test-data" title="Permalink to this heading">¶</a></h3>
 <p>Test data is random hex strings ranging from 2 characters to
 64 characters.</p>
 <p>The two algorithms were measured how much time they take to
@@ -106,7 +108,7 @@ process 1,000,000 string pairs of each length.</p>
 </section>
 </section>
 <section id="result">
-<h2>3. Result<a class="headerlink" href="#result" title="Permalink to this headline">¶</a></h2>
+<h2>3. Result<a class="headerlink" href="#result" title="Permalink to this heading">¶</a></h2>
 <p>The following figure show the result on Intel Xeon(R) E5-2660
 (2.60Ghz). The program was compiled using GCC 8.3.0.</p>
 <p>As you can see, the Myers algorithm generally performs better
@@ -157,19 +159,26 @@ algorithm. Shorter than that, the converse holds true.</p>
 
 <h3>Navigation</h3>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="research.html">Research</a></li>
-<li class="toctree-l1"><a class="reference internal" href="citation.html">Citation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="research.html">Researches</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="wagner-fischer/index.html">Can We Optimize the Wagner-Fischer Algorithm?</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Wagner-Fischer vs Myers’ Algorithm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="20220515-dna100m.html">Fast fuzzy search on 100 million DNA dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fastcomp/index.html">mbleven – A fast algorithm for bounded edit distance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tinyfss/index.html">TinyFastSS – An Implementatin of FastSS</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">About Author</a></li>
 </ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-  <li><a href="research.html">Research</a><ul>
+  <li><a href="research.html">Researches</a><ul>
       <li>Previous: <a href="wagner-fischer/index.html" title="previous chapter">Can We Optimize the Wagner-Fischer Algorithm?</a></li>
-      <li>Next: <a href="fastcomp/index.html" title="next chapter">mbleven – A fast algorithm for bounded edit distance</a></li>
+      <li>Next: <a href="20220515-dna100m.html" title="next chapter">Fast fuzzy search on 100 million DNA dataset</a></li>
   </ul></li>
   </ul></li>
 </ul>
@@ -183,7 +192,7 @@ algorithm. Shorter than that, the converse holds true.</p>
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -200,7 +209,7 @@ algorithm. Shorter than that, the converse holds true.</p>
       &copy;2011-2022, Fujimoto Seiji.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.2.3</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>

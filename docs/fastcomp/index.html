@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
     <title>mbleven – A fast algorithm for bounded edit distance &#8212; Polyleven</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
@@ -13,14 +13,16 @@
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="canonical" href="https://ceptord.net/fastcomp/index.html" />
     <link rel="shortcut icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="TinyFastSS – An Implementatin of FastSS" href="../tinyfss/index.html" />
-    <link rel="prev" title="Wagner-Fischer vs Myers’ Algorithm" href="../20200815-Comparison.html" />
+    <link rel="prev" title="Fast fuzzy search on 100 million DNA dataset" href="../20220515-dna100m.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -38,19 +40,19 @@
           <div class="body" role="main">
             
   <section id="mbleven-a-fast-algorithm-for-bounded-edit-distance">
-<h1>mbleven – A fast algorithm for bounded edit distance<a class="headerlink" href="#mbleven-a-fast-algorithm-for-bounded-edit-distance" title="Permalink to this headline">¶</a></h1>
+<h1>mbleven – A fast algorithm for bounded edit distance<a class="headerlink" href="#mbleven-a-fast-algorithm-for-bounded-edit-distance" title="Permalink to this heading">¶</a></h1>
 <dl class="field-list simple">
-<dt class="field-odd">Author</dt>
+<dt class="field-odd">Author<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Fujimoto Seiji</p>
 </dd>
-<dt class="field-even">Published</dt>
+<dt class="field-even">Published<span class="colon">:</span></dt>
 <dd class="field-even"><p>2012-03-01</p>
 </dd>
-<dt class="field-odd">Copyright</dt>
+<dt class="field-odd">Copyright<span class="colon">:</span></dt>
 <dd class="field-odd"><p>This document has been placed in the public domain.</p>
 </dd>
 </dl>
-<div class="contents local topic" id="table-of-contents">
+<nav class="contents local" id="table-of-contents">
 <p class="topic-title">Table of Contents</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#how-fast-is-it" id="id1">1. How fast is it?</a></p></li>
@@ -62,12 +64,12 @@
 </ul>
 </li>
 </ul>
-</div>
+</nav>
 <p><em class="dfn">mbleven</em> is a fast algorithm to compute k-bounded Levenshtein
 distance. In general, it’s one of the fastest algorithm for cases
 where the bound parameter is small (<span class="math notranslate nohighlight">\(k &lt; 3\)</span>).</p>
 <section id="how-fast-is-it">
-<h2>1. How fast is it?<a class="headerlink" href="#how-fast-is-it" title="Permalink to this headline">¶</a></h2>
+<h2>1. How fast is it?<a class="headerlink" href="#how-fast-is-it" title="Permalink to this heading">¶</a></h2>
 <p>To illustrate the performance characteristic, I conducted a benchmark
 test that compares mbleven and <a class="reference internal" href="../wagner-fischer/index.html"><span class="doc">the Wagner-Fischer algorithm</span></a>.</p>
 <p>The measurement was done by count the time each algorithm takes to
@@ -84,7 +86,7 @@ $ ./mbleven-benchmark
 </div>
 </section>
 <section id="implementations">
-<h2>2. Implementations<a class="headerlink" href="#implementations" title="Permalink to this headline">¶</a></h2>
+<h2>2. Implementations<a class="headerlink" href="#implementations" title="Permalink to this heading">¶</a></h2>
 <p>There are several implementations available.</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://github.com/fujimotos/mbleven">mbleven</a> is the reference implementation written in Python. This implementation also supports Damerau-Levenshtein distance.</p></li>
@@ -93,7 +95,7 @@ $ ./mbleven-benchmark
 </ul>
 </section>
 <section id="how-it-works">
-<h2>3. How it works<a class="headerlink" href="#how-it-works" title="Permalink to this headline">¶</a></h2>
+<h2>3. How it works<a class="headerlink" href="#how-it-works" title="Permalink to this heading">¶</a></h2>
 <p>mbleven is a <em>hypothesis-based</em> algorithm, which means that it solves
 the edit distance problem by testing a collection of hypotheses.</p>
 <p>Suppose you are trying to compute the distance between <span class="math notranslate nohighlight">\(S\)</span> and <span class="math notranslate nohighlight">\(T\)</span> under
@@ -110,7 +112,7 @@ of them holds true.</p>
 using <span class="math notranslate nohighlight">\(O(1)\)</span> space, so it can run quite faster than the common
 algorithms that require <span class="math notranslate nohighlight">\(O(n^2)\)</span> time.</p>
 <section id="efficient-pruning">
-<h3>3.1. Efficient Pruning<a class="headerlink" href="#efficient-pruning" title="Permalink to this headline">¶</a></h3>
+<h3>3.1. Efficient Pruning<a class="headerlink" href="#efficient-pruning" title="Permalink to this heading">¶</a></h3>
 <p>One important aspect of mbleven is very efficient pruning of search
 space. In particular, we can reject most of hypotheses just by
 looking at the length of input strings.</p>
@@ -126,7 +128,7 @@ substitution”. If S = ‘foobar’ and T = ‘bar’ with <span class="math no
 to test “three deletions”.</p>
 </section>
 <section id="verification-algorithm">
-<h3>3.2. Verification Algorithm<a class="headerlink" href="#verification-algorithm" title="Permalink to this headline">¶</a></h3>
+<h3>3.2. Verification Algorithm<a class="headerlink" href="#verification-algorithm" title="Permalink to this heading">¶</a></h3>
 <p>As mentioned above, each hypothesis can be verified in <span class="math notranslate nohighlight">\(O(n)\)</span> time.
 The following code shows how the verification can be done:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">check_model</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
@@ -190,18 +192,25 @@ function runs in linear time to the length of the input strings.</p>
 
 <h3>Navigation</h3>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../research.html">Research</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../citation.html">Citation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../research.html">Researches</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../wagner-fischer/index.html">Can We Optimize the Wagner-Fischer Algorithm?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../20200815-Comparison.html">Wagner-Fischer vs Myers’ Algorithm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../20220515-dna100m.html">Fast fuzzy search on 100 million DNA dataset</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">mbleven – A fast algorithm for bounded edit distance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tinyfss/index.html">TinyFastSS – An Implementatin of FastSS</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contact.html">About Author</a></li>
 </ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
-  <li><a href="../research.html">Research</a><ul>
-      <li>Previous: <a href="../20200815-Comparison.html" title="previous chapter">Wagner-Fischer vs Myers’ Algorithm</a></li>
+  <li><a href="../research.html">Researches</a><ul>
+      <li>Previous: <a href="../20220515-dna100m.html" title="previous chapter">Fast fuzzy search on 100 million DNA dataset</a></li>
       <li>Next: <a href="../tinyfss/index.html" title="next chapter">TinyFastSS – An Implementatin of FastSS</a></li>
   </ul></li>
   </ul></li>
@@ -216,7 +225,7 @@ function runs in linear time to the length of the input strings.</p>
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -233,7 +242,7 @@ function runs in linear time to the length of the input strings.</p>
       &copy;2011-2022, Fujimoto Seiji.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.2.3</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>

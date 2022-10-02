@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
     <title>The State of Windows Support in Fluent Bit &#8212; Polyleven</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
@@ -13,7 +13,9 @@
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <link rel="canonical" href="https://ceptord.net/20190717-FluentdMeetup.html" />
     <link rel="shortcut icon" href="_static/favicon.png"/>
     <link rel="index" title="Index" href="genindex.html" />
@@ -35,15 +37,15 @@
           <div class="body" role="main">
             
   <section id="the-state-of-windows-support-in-fluent-bit">
-<h1>The State of Windows Support in Fluent Bit<a class="headerlink" href="#the-state-of-windows-support-in-fluent-bit" title="Permalink to this headline">¶</a></h1>
+<h1>The State of Windows Support in Fluent Bit<a class="headerlink" href="#the-state-of-windows-support-in-fluent-bit" title="Permalink to this heading">¶</a></h1>
 <dl class="field-list simple">
-<dt class="field-odd">Author</dt>
+<dt class="field-odd">Author<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Fujimoto Seiji</p>
 </dd>
-<dt class="field-even">Published</dt>
+<dt class="field-even">Published<span class="colon">:</span></dt>
 <dd class="field-even"><p>2019-07-17</p>
 </dd>
-<dt class="field-odd">Copyright</dt>
+<dt class="field-odd">Copyright<span class="colon">:</span></dt>
 <dd class="field-odd"><p>This document has been placed in the public domain.</p>
 </dd>
 </dl>
@@ -51,12 +53,8 @@
 a collocated event of <a class="reference external" href="https://events.linuxfoundation.org/events/open-source-summit-japan-2019/">Open Source Summit Tokyo 2019</a></p>
 <p>Many thanks to Eduardo Silva and Masahiro Nakagawa for inviting me to talk.</p>
 <section id="introduction">
-<h2>1. Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<h2>1. Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">¶</a></h2>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><figure class="align-default">
 <img alt="_images/slide-thumb-01.png" src="_images/slide-thumb-01.png" />
@@ -70,12 +68,8 @@ a collocated event of <a class="reference external" href="https://events.linuxfo
 </table>
 </section>
 <section id="log-management-problem">
-<h2>2. Log management problem<a class="headerlink" href="#log-management-problem" title="Permalink to this headline">¶</a></h2>
+<h2>2. Log management problem<a class="headerlink" href="#log-management-problem" title="Permalink to this heading">¶</a></h2>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><figure class="align-default">
 <img alt="_images/slide-thumb-03.png" src="_images/slide-thumb-03.png" />
@@ -154,12 +148,8 @@ Your log files do not transfer themselves to other servers, so you need to make 
 </table>
 </section>
 <section id="fluent-bit-as-a-solution">
-<h2>3. Fluent Bit as a Solution<a class="headerlink" href="#fluent-bit-as-a-solution" title="Permalink to this headline">¶</a></h2>
+<h2>3. Fluent Bit as a Solution<a class="headerlink" href="#fluent-bit-as-a-solution" title="Permalink to this heading">¶</a></h2>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><figure class="align-default">
 <img alt="_images/slide-thumb-10.png" src="_images/slide-thumb-10.png" />
@@ -211,12 +201,8 @@ Your log files do not transfer themselves to other servers, so you need to make 
 </table>
 </section>
 <section id="state-of-windows-support">
-<h2>4. State of Windows Support<a class="headerlink" href="#state-of-windows-support" title="Permalink to this headline">¶</a></h2>
+<h2>4. State of Windows Support<a class="headerlink" href="#state-of-windows-support" title="Permalink to this heading">¶</a></h2>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><figure class="align-default">
 <img alt="_images/slide-thumb-15.png" src="_images/slide-thumb-15.png" />
@@ -266,12 +252,8 @@ support for ARM 64 since two years ago.</p>
 </table>
 </section>
 <section id="tutorial-for-windows-users">
-<h2>5. Tutorial for Windows Users<a class="headerlink" href="#tutorial-for-windows-users" title="Permalink to this headline">¶</a></h2>
+<h2>5. Tutorial for Windows Users<a class="headerlink" href="#tutorial-for-windows-users" title="Permalink to this heading">¶</a></h2>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><figure class="align-default">
 <img alt="_images/slide-thumb-20.png" src="_images/slide-thumb-20.png" />
@@ -352,12 +334,8 @@ support for ARM 64 since two years ago.</p>
 </table>
 </section>
 <section id="future-of-fluent-bit">
-<h2>6. Future of Fluent Bit<a class="headerlink" href="#future-of-fluent-bit" title="Permalink to this headline">¶</a></h2>
+<h2>6. Future of Fluent Bit<a class="headerlink" href="#future-of-fluent-bit" title="Permalink to this heading">¶</a></h2>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><figure class="align-default">
 <img alt="_images/slide-thumb-28.png" src="_images/slide-thumb-28.png" />
@@ -417,10 +395,10 @@ support for ARM 64 since two years ago.</p>
 
 <h3>Navigation</h3>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
-<li class="toctree-l1"><a class="reference internal" href="research.html">Research</a></li>
-<li class="toctree-l1"><a class="reference internal" href="citation.html">Citation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="research.html">Researches</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">About Author</a></li>
 </ul>
 
 <div class="relations">
@@ -439,7 +417,7 @@ support for ARM 64 since two years ago.</p>
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -456,7 +434,7 @@ support for ARM 64 since two years ago.</p>
       &copy;2011-2022, Fujimoto Seiji.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.2.3</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>

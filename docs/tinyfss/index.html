@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
     <title>TinyFastSS – An Implementatin of FastSS &#8212; Polyleven</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
@@ -13,12 +13,14 @@
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <link rel="canonical" href="https://ceptord.net/tinyfss/index.html" />
     <link rel="shortcut icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Citation" href="../citation.html" />
+    <link rel="next" title="About Author" href="../contact.html" />
     <link rel="prev" title="mbleven – A fast algorithm for bounded edit distance" href="../fastcomp/index.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -37,20 +39,20 @@
           <div class="body" role="main">
             
   <section id="tinyfastss-an-implementatin-of-fastss">
-<h1>TinyFastSS – An Implementatin of FastSS<a class="headerlink" href="#tinyfastss-an-implementatin-of-fastss" title="Permalink to this headline">¶</a></h1>
+<h1>TinyFastSS – An Implementatin of FastSS<a class="headerlink" href="#tinyfastss-an-implementatin-of-fastss" title="Permalink to this heading">¶</a></h1>
 <dl class="field-list simple">
-<dt class="field-odd">Author</dt>
+<dt class="field-odd">Author<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Fujimoto Seiji</p>
 </dd>
-<dt class="field-even">Published</dt>
+<dt class="field-even">Published<span class="colon">:</span></dt>
 <dd class="field-even"><p>2012-03-01</p>
 </dd>
-<dt class="field-odd">Copyright</dt>
+<dt class="field-odd">Copyright<span class="colon">:</span></dt>
 <dd class="field-odd"><p>This document has been placed in the public domain.</p>
 </dd>
 </dl>
 <section id="introduction">
-<h2>1. Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<h2>1. Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">¶</a></h2>
 <p><a class="reference external" href="http://fastss.csg.uzh.ch/">FastSS</a> is a data structure for approximate string matching that
 allows you to retrieve a set of similar words very quickly.
 FastSS was invented by researchers at Zurich University in 2007
@@ -59,7 +61,7 @@ FastSS was invented by researchers at Zurich University in 2007
 in less than 300 LoC.</p>
 </section>
 <section id="installation">
-<h2>2. Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<h2>2. Installation<a class="headerlink" href="#installation" title="Permalink to this heading">¶</a></h2>
 <p>You can install TinyFastSS from PyPI:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pip install TinyFastSS
 </pre></div>
@@ -67,9 +69,9 @@ in less than 300 LoC.</p>
 <p>The source code is available on <a class="reference external" href="https://github.com/fujimotos/TinyFastSS">https://github.com/fujimotos/TinyFastSS</a></p>
 </section>
 <section id="usage">
-<h2>3. Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<h2>3. Usage<a class="headerlink" href="#usage" title="Permalink to this heading">¶</a></h2>
 <section id="basic-usage">
-<h3>3.1. Basic Usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h3>
+<h3>3.1. Basic Usage<a class="headerlink" href="#basic-usage" title="Permalink to this heading">¶</a></h3>
 <p>Create an index from your word sets.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">fastss</span>
 
@@ -80,12 +82,12 @@ in less than 300 LoC.</p>
 </div>
 <p>Perform a similarity search using <code class="docutils literal notranslate"><span class="pre">index.query()</span></code>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">fastss</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;fastss.dat&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">index</span><span class="p">:</span>
-    <span class="k">print</span><span class="p">(</span><span class="n">index</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;test&#39;</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">index</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;test&#39;</span><span class="p">))</span>
 </pre></div>
 </div>
 </section>
 <section id="use-tinyfastss-from-command-line">
-<h3>3.2. Use TinyFastSS from Command Line<a class="headerlink" href="#use-tinyfastss-from-command-line" title="Permalink to this headline">¶</a></h3>
+<h3>3.2. Use TinyFastSS from Command Line<a class="headerlink" href="#use-tinyfastss-from-command-line" title="Permalink to this heading">¶</a></h3>
 <p>You also can use TinyFastSS from console. Here is an example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ head -n 3 /usr/share/dict/words
 aardvark
@@ -99,9 +101,9 @@ $ python -m fastss -q index.dat adaptive
 </section>
 </section>
 <section id="benchmark">
-<h2>4. Benchmark<a class="headerlink" href="#benchmark" title="Permalink to this headline">¶</a></h2>
+<h2>4. Benchmark<a class="headerlink" href="#benchmark" title="Permalink to this heading">¶</a></h2>
 <section id="dataset">
-<h3>4.1. Dataset<a class="headerlink" href="#dataset" title="Permalink to this headline">¶</a></h3>
+<h3>4.1. Dataset<a class="headerlink" href="#dataset" title="Permalink to this heading">¶</a></h3>
 <p>I benchmarked TinyFastSS using <a class="reference external" href="http://wordlist.aspell.net/">SCOWL</a> v2015-08-24 (english-50).</p>
 <ul class="simple">
 <li><p>The word set contained 98,986 words.</p></li>
@@ -109,7 +111,7 @@ $ python -m fastss -q index.dat adaptive
 </ul>
 </section>
 <section id="index-creation-perrmance">
-<h3>4.2. Index Creation Perrmance<a class="headerlink" href="#index-creation-perrmance" title="Permalink to this headline">¶</a></h3>
+<h3>4.2. Index Creation Perrmance<a class="headerlink" href="#index-creation-perrmance" title="Permalink to this heading">¶</a></h3>
 <p>It took 3 minutes to create an index file:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ time python -m fastss -c fastss.dat dictonary.txt
 3m0.71s real     2m44.35s user     0m16.43s system
@@ -118,14 +120,9 @@ $ python -m fastss -q index.dat adaptive
 <p>The resulting index was 161 MB in size.</p>
 </section>
 <section id="query-perrmance">
-<h3>4.3. Query Perrmance<a class="headerlink" href="#query-perrmance" title="Permalink to this headline">¶</a></h3>
+<h3>4.3. Query Perrmance<a class="headerlink" href="#query-perrmance" title="Permalink to this heading">¶</a></h3>
 <p>I tested the query performance using randomly choosen words.</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 24%" />
-<col style="width: 33%" />
-<col style="width: 42%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>WORD</p></th>
 <th class="head"><p>TIME [msec]</p></th>
@@ -187,19 +184,26 @@ $ python -m fastss -q index.dat adaptive
 
 <h3>Navigation</h3>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../research.html">Research</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../citation.html">Citation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../research.html">Researches</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../wagner-fischer/index.html">Can We Optimize the Wagner-Fischer Algorithm?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../20200815-Comparison.html">Wagner-Fischer vs Myers’ Algorithm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../20220515-dna100m.html">Fast fuzzy search on 100 million DNA dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fastcomp/index.html">mbleven – A fast algorithm for bounded edit distance</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">TinyFastSS – An Implementatin of FastSS</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contact.html">About Author</a></li>
 </ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
-  <li><a href="../research.html">Research</a><ul>
+  <li><a href="../research.html">Researches</a><ul>
       <li>Previous: <a href="../fastcomp/index.html" title="previous chapter">mbleven – A fast algorithm for bounded edit distance</a></li>
-      <li>Next: <a href="../citation.html" title="next chapter">Citation</a></li>
+      <li>Next: <a href="../contact.html" title="next chapter">About Author</a></li>
   </ul></li>
   </ul></li>
 </ul>
@@ -213,7 +217,7 @@ $ python -m fastss -q index.dat adaptive
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -230,7 +234,7 @@ $ python -m fastss -q index.dat adaptive
       &copy;2011-2022, Fujimoto Seiji.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.2.3</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>
