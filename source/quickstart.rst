@@ -25,13 +25,15 @@ Polyleven can handle multi-byte characters properly:
 
 That's all! Now you can start using polyleven in your project.
 
-Quick Demo: Find similar Wikipedia articles
-===========================================
+Perform fuzzy search on Wikipedia
+=================================
 
-Let's do something interesting with polyleven. First, download the full list of
-Wikipedia article titles from wikimedia.org::
+Here is a quick demo that you can test at home: Implement a fast fuzzy
+title search on Wikipedia articles.
 
-   $ wget http://dumps.wikimedia.org/enwiki/latest/enwiki-latest-all-titles-in-ns0.gz  # 91MB
+First, download the title list from Wikiipedia (90MB with Gzip compression)::
+
+   $ wget http://dumps.wikimedia.org/enwiki/latest/enwiki-latest-all-titles-in-ns0.gz
    $ gzip -d enwiki-latest-all-titles-in-ns0.gz
 
 Now you can perform fuzzy search on Wikipedia titles:
@@ -40,6 +42,8 @@ Now you can perform fuzzy search on Wikipedia titles:
 >>> titles = [t.strip() for t in open('enwiki-latest-all-titles-in-ns0')]
 >>> [t for t in titles if levenshtein(x, "Mark_Twain") < 3]
 ['Mark_Tedin', 'Mark_Twang', 'Marc_Train', 'Mark_Trail', 'Mark_Tuan', 'Mark_Twain', 'Marc_Twain', 'Mark_Krain', 'Mark_twain', 'Mack_Swain', 'Mark_Tobin', 'Mark_Brain', 'Mark_Turin', 'Mark_Tulin', 'Mark_Tan', 'Mark_Fain', 'Dark_Train', 'Mark_Spain']
+
+Easy, huf?
 
 What's next?
 ============
