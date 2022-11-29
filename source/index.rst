@@ -43,5 +43,6 @@ Polyleven is a fast Levenshtein library for Python 3.x.
    :maxdepth: 2
 
    quickstart.rst
+   howto.rst
    research.rst
    contact.rst

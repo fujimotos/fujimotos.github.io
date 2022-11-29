@@ -1,6 +1,6 @@
-==========
-Researches
-==========
+===============
+Technical Notes
+===============
 
 This page contains a collection of technical surveys which I
 did during development of polyleven.
@@ -11,7 +11,6 @@ did during development of polyleven.
 
    wagner-fischer/index.rst
    20200815-Comparison.rst
-   20220515-dna100m.rst
    fastcomp/index.rst
    tinyfss/index.rst
    
