@@ -20,7 +20,7 @@
     <link rel="shortcut icon" href="_static/favicon.png"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="FAQ" href="faq.html" />
+    <link rel="next" title="How-To Guides" href="howto.html" />
     <link rel="prev" title="Polyleven" href="index.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -62,11 +62,12 @@
 </div>
 <p>That’s all! Now you can start using polyleven in your project.</p>
 </section>
-<section id="quick-demo-find-similar-wikipedia-articles">
-<h2>Quick Demo: Find similar Wikipedia articles<a class="headerlink" href="#quick-demo-find-similar-wikipedia-articles" title="Permalink to this heading">¶</a></h2>
-<p>Let’s do something interesting with polyleven. First, download the full list of
-Wikipedia article titles from wikimedia.org:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ wget http://dumps.wikimedia.org/enwiki/latest/enwiki-latest-all-titles-in-ns0.gz  # 91MB
+<section id="perform-fuzzy-search-on-wikipedia">
+<h2>Perform fuzzy search on Wikipedia<a class="headerlink" href="#perform-fuzzy-search-on-wikipedia" title="Permalink to this heading">¶</a></h2>
+<p>Here is a quick demo that you can test at home: Implement a fast fuzzy
+title search on Wikipedia articles.</p>
+<p>First, download the title list from Wikiipedia (90MB with Gzip compression):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ wget http://dumps.wikimedia.org/enwiki/latest/enwiki-latest-all-titles-in-ns0.gz
 $ gzip -d enwiki-latest-all-titles-in-ns0.gz
 </pre></div>
 </div>
@@ -77,6 +78,7 @@ $ gzip -d enwiki-latest-all-titles-in-ns0.gz
 <span class="go">[&#39;Mark_Tedin&#39;, &#39;Mark_Twang&#39;, &#39;Marc_Train&#39;, &#39;Mark_Trail&#39;, &#39;Mark_Tuan&#39;, &#39;Mark_Twain&#39;, &#39;Marc_Twain&#39;, &#39;Mark_Krain&#39;, &#39;Mark_twain&#39;, &#39;Mack_Swain&#39;, &#39;Mark_Tobin&#39;, &#39;Mark_Brain&#39;, &#39;Mark_Turin&#39;, &#39;Mark_Tulin&#39;, &#39;Mark_Tan&#39;, &#39;Mark_Fain&#39;, &#39;Dark_Train&#39;, &#39;Mark_Spain&#39;]</span>
 </pre></div>
 </div>
+<p>Easy, huf?</p>
 </section>
 <section id="what-s-next">
 <h2>What’s next?<a class="headerlink" href="#what-s-next" title="Permalink to this heading">¶</a></h2>
@@ -118,12 +120,12 @@ $ gzip -d enwiki-latest-all-titles-in-ns0.gz
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Quickstart</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#compute-levenshtein-distance">Compute Levenshtein Distance</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#quick-demo-find-similar-wikipedia-articles">Quick Demo: Find similar Wikipedia articles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#perform-fuzzy-search-on-wikipedia">Perform fuzzy search on Wikipedia</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#what-s-next">What’s next?</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
-<li class="toctree-l1"><a class="reference internal" href="research.html">Researches</a></li>
+<li class="toctree-l1"><a class="reference internal" href="howto.html">How-To Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="research.html">Technical Notes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">About Author</a></li>
 </ul>
 
@@ -132,7 +134,7 @@ $ gzip -d enwiki-latest-all-titles-in-ns0.gz
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="index.html" title="previous chapter">Polyleven</a></li>
-      <li>Next: <a href="faq.html" title="next chapter">FAQ</a></li>
+      <li>Next: <a href="howto.html" title="next chapter">How-To Guides</a></li>
   </ul></li>
 </ul>
 </div>
@@ -162,7 +164,7 @@ $ gzip -d enwiki-latest-all-titles-in-ns0.gz
       &copy;2011-2022, Fujimoto Seiji.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.2.3</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>

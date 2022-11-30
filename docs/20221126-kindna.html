@@ -1,0 +1,250 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Find similar pairs of DNA sequences &#8212; Polyleven</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="canonical" href="https://ceptord.net/20221126-kindna.html" />
+    <link rel="shortcut icon" href="_static/favicon.png"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Fast fuzzy search on 100 million DNA dataset" href="20220515-dna100m.html" />
+    <link rel="prev" title="How-To Guides" href="howto.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="find-similar-pairs-of-dna-sequences">
+<h1>Find similar pairs of DNA sequences<a class="headerlink" href="#find-similar-pairs-of-dna-sequences" title="Permalink to this heading">¶</a></h1>
+<dl class="field-list simple">
+<dt class="field-odd">Author<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Fujimoto Seiji</p>
+</dd>
+<dt class="field-even">Publish<span class="colon">:</span></dt>
+<dd class="field-even"><p>2022-11-26</p>
+</dd>
+<dt class="field-odd">Copyright<span class="colon">:</span></dt>
+<dd class="field-odd"><p>This document has been placed in the public domain.</p>
+</dd>
+</dl>
+<nav class="contents local" id="table-of-contents">
+<p class="topic-title">Table of Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#introduction" id="id2">1. Introduction</a></p></li>
+<li><p><a class="reference internal" href="#how-to-solve-it" id="id3">2. How to solve it?</a></p>
+<ul>
+<li><p><a class="reference internal" href="#naive-solution" id="id4">2.1. Naive solution</a></p></li>
+<li><p><a class="reference internal" href="#faster-solution-with-fastss" id="id5">2.2. Faster solution (with FastSS)</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#benchmark" id="id6">3. Benchmark</a></p></li>
+<li><p><a class="reference internal" href="#references" id="id7">4. References</a></p></li>
+</ul>
+</nav>
+<section id="introduction">
+<h2>1. Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">¶</a></h2>
+<p>Suppose that you have bio dataset that contains 10k DNA sequences.
+For research purpose, you want to find every pair in the dataset that
+differ only by one character (base-pair). How would you implement it?</p>
+<p>Let’s restate this problem in a more formal manner:</p>
+<blockquote>
+<div><p>Given a dataset containing N DNA sequences, find all pairs
+where Levenshtein distance is at most 1.</p>
+</div></blockquote>
+<p>This article explores several solutions for this problem.</p>
+</section>
+<section id="how-to-solve-it">
+<h2>2. How to solve it?<a class="headerlink" href="#how-to-solve-it" title="Permalink to this heading">¶</a></h2>
+<section id="naive-solution">
+<h3>2.1. Naive solution<a class="headerlink" href="#naive-solution" title="Permalink to this heading">¶</a></h3>
+<p>If <span class="math notranslate nohighlight">\(N\)</span> is small, you can just compute all the combination of
+the DNA sequences. Here is what I have in mind:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">combinations</span>
+<span class="kn">from</span> <span class="nn">polyleven</span> <span class="kn">import</span> <span class="n">levenshtein</span>
+
+<span class="c1"># dataset = [&quot;AGCT&quot;, &quot;AGTT&quot;, ...]</span>
+<span class="k">def</span> <span class="nf">naive</span><span class="p">(</span><span class="n">dataset</span><span class="p">):</span>
+     <span class="k">for</span> <span class="n">dna1</span><span class="p">,</span> <span class="n">dna2</span> <span class="ow">in</span> <span class="n">combinations</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+         <span class="k">if</span> <span class="n">levenshtein</span><span class="p">(</span><span class="n">dna1</span><span class="p">,</span> <span class="n">dna2</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+             <span class="nb">print</span><span class="p">(</span><span class="n">dna1</span><span class="p">,</span> <span class="n">dna2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Since we need to compute <span class="math notranslate nohighlight">\(N(N-1) \over 2\)</span> pairs, this solution
+consumes <span class="math notranslate nohighlight">\(O(N^2)\)</span> time.</p>
+</section>
+<section id="faster-solution-with-fastss">
+<h3>2.2. Faster solution (with FastSS)<a class="headerlink" href="#faster-solution-with-fastss" title="Permalink to this heading">¶</a></h3>
+<p>The computation time for the previous solution increases quadratically
+as <span class="math notranslate nohighlight">\(N\)</span> gets bigger. It will be not feasible at a certain data size.</p>
+<p>The common way to handle this issue is to introduce a clever index
+structure that allows to find similar entries quickly. One such data
+structure is FastSS <a class="reference internal" href="citation.html#bocek2007" id="id1"><span>[Bocek2007]</span></a>.</p>
+<p>The basic idea is:</p>
+<ul class="simple">
+<li><p>If two strings is similar enough, they should have a common substring.
+For example, <cite>AGTCA</cite> and <cite>AGTCG</cite> look very <em>similar</em>, exactly
+because they share the same prefix <cite>AGTC</cite>.</p></li>
+<li><p>This means that, theoretically, you can parittion entries by their
+substrings.  In this scheme, <cite>AGTCA</cite> will be in the same group with
+<cite>AGTCG</cite>, but <cite>TTTGT</cite> won’t.</p></li>
+<li><p>This partitioning will make the task easy, because you only need to
+evaluate combinations within each group, which contains only a small
+subset of the original dataset.</p></li>
+</ul>
+<p>For details, please read the referenced paper. Here is the simple
+implementation of this idea:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">combinations</span>
+<span class="kn">from</span> <span class="nn">polyleven</span> <span class="kn">import</span> <span class="n">levenshtein</span>
+
+<span class="k">def</span> <span class="nf">make_index</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="n">max_dist</span><span class="p">):</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">dist</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">max_dist</span><span class="p">,</span> <span class="n">length</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">variants</span> <span class="o">=</span> <span class="n">combinations</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="n">length</span> <span class="o">-</span> <span class="n">dist</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">variant</span> <span class="ow">in</span> <span class="n">variants</span><span class="p">:</span>
+            <span class="n">res</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">variant</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">res</span>
+
+<span class="k">def</span> <span class="nf">fastss</span><span class="p">(</span><span class="n">dataset</span><span class="p">):</span>
+    <span class="n">groups</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">set</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">dna</span> <span class="ow">in</span> <span class="n">dataset</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">make_index</span><span class="p">(</span><span class="n">dna</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">groups</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">dna</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">grp</span> <span class="ow">in</span> <span class="n">groups</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">dna1</span><span class="p">,</span> <span class="n">dna2</span> <span class="ow">in</span> <span class="n">combinations</span><span class="p">(</span><span class="n">grp</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">levenshtein</span><span class="p">(</span><span class="n">dna1</span><span class="p">,</span> <span class="n">dna2</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">dna1</span><span class="p">,</span> <span class="n">dna2</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="benchmark">
+<h2>3. Benchmark<a class="headerlink" href="#benchmark" title="Permalink to this heading">¶</a></h2>
+<p>The following graph shows how much time each solution requires
+to process a dataset of size N.</p>
+<figure class="align-default">
+<img alt="_images/benchmark.png" src="_images/benchmark.png" />
+</figure>
+<p>You can see that using a search index reduces the computation time
+quite significantly.</p>
+</section>
+<section id="references">
+<h2>4. References<a class="headerlink" href="#references" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/fujimotos/kindna">fujimotos/kindna</a> includes a full
+implementation of the faster solution.</p></li>
+</ul>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Polyleven</a></h1>
+
+
+
+<p class="blurb">Fast Levevenshtein Distance Library for Python 3</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=fujimotos&repo=polyleven&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="howto.html">How-To Guides</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Find similar pairs of DNA sequences</a></li>
+<li class="toctree-l2"><a class="reference internal" href="20220515-dna100m.html">Fast fuzzy search on 100 million DNA dataset</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="research.html">Technical Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">About Author</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="howto.html">How-To Guides</a><ul>
+      <li>Previous: <a href="howto.html" title="previous chapter">How-To Guides</a></li>
+      <li>Next: <a href="20220515-dna100m.html" title="next chapter">Fast fuzzy search on 100 million DNA dataset</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2011-2022, Fujimoto Seiji.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
