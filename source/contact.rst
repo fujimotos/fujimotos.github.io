@@ -2,14 +2,36 @@
 About Author
 ============
 
-Fujimoto Seiji
+**Fujimoto Seiji**
 
-* Programming with Python since 2005.
-* Working as an executive officer of `ClearCode Inc.`_ (2021-)
+* Previously an executive officer of `ClearCode Inc.`_ (2021-2023)
+
+* Currently a research fellow at `Reazon Human Interaction Lab`_.
+
+  * I'm mainly working on `ReazonSpeech`_ -- a free and massive Japanese
+    corpus and speech recognition model.
+
+  * Our research `won Outstanding Award from Natural Language Processing
+    Association in 2023 <https://www.anlp.jp/nlp2023/award.html#A5-3>`_.
+
+.. topic:: Do you need help?
+
+   * **If you have a question with my OSS projects,** don't afraid to
+     contact me! I occationaly get emails from researchers and
+     I'm happy to respond to them!
+
+   * **Need a consultant?** I'm also available for consultancy works.
+     Drop me an email if you need to build a high-quality Python software
+     as quickly as possible.
 
 .. _Clearcode Inc.: https://www.clear-code.com
+.. _Reazon Human Interaction Lab: https://research.reazon.jp
+.. _ReazonSpeech: https://research.reazon.jp/projects/ReazonSpeech/
 
-List of projects I worked on:
+Projects & Talks
+----------------
+
+Here is the list of projects I worked on:
 
 .. list-table::
    :widths: 20 30
@@ -17,7 +39,9 @@ List of projects I worked on:
 
    * - Name
      - Description
-   * - `Fluentd/Fluent Bit <https://github.com/fluent>`_ (2018-)
+   * - `ReazonSpeech`_ (2022-)
+     - A free and massive Japanese audio corpus.
+   * - `Fluentd/Fluent Bit <https://github.com/fluent>`_ (2018-2023)
      - Real-time Log forwareder. Comitter since 2018.
    * - `polyleven <https://github.com/fujimotos/polyleven>`_ (2017-)
      - A fast Levenshtein distance library for Python 3.x.
@@ -27,7 +51,20 @@ List of projects I worked on:
      - Python implementation of FastSS, a hash-based index
        structure for fuzzy search.
 
-Here is my past talks:
+List of papers:
+
+.. list-table::
+   :widths: 10 40 10
+   :header-rows: 1
+
+   * - Date
+     - Title
+     - Links
+   * - 2023-03
+     - Yue Yin, Daijiro Mori, Fujimoto Seiji. "ReazonSpeech: A Free and Massive Corpus for Japanese ASR.
+     - `PDF <https://research.reazon.jp/_static/reazonspeech_nlp2023.pdf>`_
+
+Past talks:
 
 .. list-table::
    :widths: 10 15 30 10
