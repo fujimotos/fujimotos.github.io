@@ -2,10 +2,9 @@
 About Author
 ============
 
-**Fujimoto Seiji**
+**Fujimoto Seiji <fujimoto@ceptord.net>**
 
-* Previously an executive officer of `ClearCode Inc.`_ (2021-2023)
-
+* Previously an executive officer of ClearCode Inc. (2021-2023)
 * Currently a research fellow at `Reazon Human Interaction Lab`_.
 
   * I'm mainly working on `ReazonSpeech`_ -- a free and massive Japanese
@@ -14,22 +13,11 @@ About Author
   * Our research `won Outstanding Award from Natural Language Processing
     Association in 2023 <https://www.anlp.jp/nlp2023/award.html#A5-3>`_.
 
-.. topic:: Do you need help?
-
-   * **If you have a question with my OSS projects,** don't afraid to
-     contact me! I occationaly get emails from researchers and
-     I'm happy to respond to them!
-
-   * **Need a consultant?** I'm also available for consultancy works.
-     Drop me an email if you need to build a high-quality Python software
-     as quickly as possible.
-
-.. _Clearcode Inc.: https://www.clear-code.com
 .. _Reazon Human Interaction Lab: https://research.reazon.jp
 .. _ReazonSpeech: https://research.reazon.jp/projects/ReazonSpeech/
 
 Projects & Talks
-----------------
+================
 
 Here is the list of projects I worked on:
 
