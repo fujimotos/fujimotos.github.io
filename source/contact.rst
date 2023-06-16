@@ -62,6 +62,10 @@ Past talks:
      - Conference
      - Title
      - Links
+   * - 2023-06-15
+     - `Tokyo BISH Bash #8 <https://tokyo-bish-bash.connpass.com/event/283268/>`_
+     - 大規模日本語音声コーパスReazonSpeechの現状と展望
+     - `Slides <_static/20230615-tokyobishbash.pdf>`__
    * - 2022-09-09
      - `RubyKaigi 2022 <https://rubykaigi.org/2022/>`_
      - How Fast Really is Ruby 3.x?
